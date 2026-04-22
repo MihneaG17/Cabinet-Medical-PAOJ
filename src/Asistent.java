@@ -25,4 +25,14 @@ public class Asistent extends PersonalMedical{
     public void setPoateRecolta(boolean poateRecolta) {
         this.poateRecolta = poateRecolta;
     }
+
+    @Override
+    public String toString() {
+        return "Asistent: " + getNume() + " " + getPrenume() +
+                " | Nr. Telefon: " + getNrTelefon() +
+                " | Grad: " + gradProfesional +
+                " | Salariu: " + getSalariu() +
+                " | Recoltare: " + (poateRecolta ? "Da" : "Nu") +
+                " | Tura: " + getTura();
+    }
 }

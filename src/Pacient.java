@@ -36,4 +36,12 @@ public class Pacient extends Persoana {
     public void addIstoricAlergii(String alergie) {
         this.istoricAlergii.add(alergie);
     }
+
+    @Override
+    public String toString() {
+        return "Pacient: " + getNume() + " " + getPrenume() +
+                " | CNP: " + getCnp() +
+                " | Grupa: " + grupaSanguina +
+                " | Alergii: " + (istoricAlergii.isEmpty() ? "Niciuna" : istoricAlergii);
+    }
 }
