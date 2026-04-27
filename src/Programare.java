@@ -61,4 +61,11 @@ public class Programare {
     public void setStatus(String status) {
         this.status=status;
     }
+
+    @Override
+    public String toString() {
+        return "Programare: " + dataSiOra.toLocalDate() + " | Ora: " + dataSiOra.toLocalTime() +
+                " | Pacient: " + pacient.getNume() + " " + pacient.getPrenume() +
+                " | Medic: Dr. " + medic.getNume() + " | Status: " + status;
+    }
 }

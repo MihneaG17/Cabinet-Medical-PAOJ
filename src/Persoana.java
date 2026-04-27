@@ -1,3 +1,5 @@
+import java.util.Objects;
+
 public abstract class Persoana {
     protected String nume;
     protected String prenume;
@@ -41,5 +43,12 @@ public abstract class Persoana {
 
     public void setNrTelefon(String nrTelefon) {
         this.nrTelefon = nrTelefon;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Persoana persoana))
+            return false;
+        return Objects.equals(cnp, persoana.cnp);
     }
 }

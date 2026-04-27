@@ -14,10 +14,10 @@ public class Factura {
 
     public Factura(double pret, LocalDate dataEmiterii, Programare programare) {
         this.idFactura=contorIdFactura++;
-        this.pret=pret;
         this.dataEmiterii=dataEmiterii;
         this.programare=programare;
         this.statusPlata=STATUS_PLATA_ASTEPTARE;
+        this.pret=programare.getServiciu().getPret()+programare.getMedic().getCostConsultatie();
     }
 
     public double getPret() {

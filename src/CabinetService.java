@@ -78,6 +78,19 @@ public class CabinetService {
         return null;
     }
 
+    public void adaugaProgramare(Programare p) {
+        programari.add(p);
+        p.getPacient().getFisaMedicala().adaugaProgramare(p);
+    }
+
+    public List<ServiciuMedical> getServicii() {
+        return servicii;
+    }
+
+    public List<Sala> getSali() {
+        return sali;
+    }
+
     private void populareDate() {
         Sala s1=new Sala(101, 1, "Consultatii");
         Sala s2=new Sala(201, 2, "Chirurgie");
