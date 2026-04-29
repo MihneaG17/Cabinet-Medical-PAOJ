@@ -10,7 +10,7 @@ public class Reteta {
     public Reteta(Medic medic, LocalDate dataEmiterii) {
         this.medic=medic;
         this.dataEmiterii=dataEmiterii;
-        this.medicamente= new ArrayList<>();
+        this.medicamente=new ArrayList<>();
     }
 
     public Medic getMedic() {
@@ -31,5 +31,10 @@ public class Reteta {
 
     public void addMedicament(Medicament medicament) {
         this.medicamente.add(medicament);
+    }
+
+    @Override
+    public String toString() {
+        return "Data: " + dataEmiterii + " - Prescris de Dr. " + medic.getNume() + " " + medic.getPrenume();
     }
 }

@@ -32,4 +32,9 @@ public class Medicament {
     public void setSubstantaActiva(String substantaActiva) {
         this.substantaActiva = substantaActiva;
     }
+
+    @Override
+    public String toString() {
+        return nume + " (" + substantaActiva + " ) " + " - " + dozaj + " mg";
+    }
 }

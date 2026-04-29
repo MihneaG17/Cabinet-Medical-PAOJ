@@ -39,7 +39,7 @@ public class MeniuInteractiv {
                     autentificarePacient();
                     break;
                 case 3:
-                    meniuMedic();
+                    autentificareMedic();
                     break;
                 case 0:
                     System.out.println("Deconectare");
@@ -401,8 +401,7 @@ public class MeniuInteractiv {
             System.out.println("3. Fa o programare");
             System.out.println("4. Vezi programarile efectuate");
             System.out.println("5. Anuleaza o programare");
-            System.out.println("6. Vezi fisa medicala");
-            System.out.println("7. Plateste facturi");
+            System.out.println("6. Plateste facturi");
             System.out.println("0. Revenire");
 
             if (scanner.hasNextInt()) {
@@ -416,61 +415,22 @@ public class MeniuInteractiv {
 
             switch (choice) {
                 case 1:
-                    System.out.println("[In lucru - metoda1");
+                    veziMediciDisponibili();
                     break;
                 case 2:
-                    System.out.println("[In lucru - metoda2");
+                    vizualizareFisaMedicala(pacientLogat);
                     break;
                 case 3:
-                    System.out.println("----Creare programare noua----");
-                    System.out.println("Alegeti medicul: ");
-                    List<Medic> mediciDisponibili=service.getMedici();
-                    for(int i=0;i<mediciDisponibili.size();i++)
-                    {
-                        System.out.println((i + 1) + ". " + mediciDisponibili.get(i).getNume() + " - " + mediciDisponibili.get(i).getPrenume() + " - " + mediciDisponibili.get(i).getSpecializare());
-                    }
-                    int indexMedic=scanner.nextInt()-1;
-                    Medic medicAles=mediciDisponibili.get(indexMedic);
-
-                    System.out.println("Alegeti serviciul medical:");
-                    List<ServiciuMedical> serviciiDisponibile = service.getServicii();
-                    for (int i=0;i<serviciiDisponibile.size();i++) {
-                        System.out.println((i + 1) + ". " + serviciiDisponibile.get(i).getNumeServiciu() + " (" + serviciiDisponibile.get(i).getPret() + " RON)");
-                    }
-                    int indexServiciu = scanner.nextInt() - 1;
-                    ServiciuMedical serviciuAles = serviciiDisponibile.get(indexServiciu);
-
-                    System.out.println("Alegeti sala:");
-                    List<Sala> saliDisponibile = service.getSali();
-                    for (int i=0;i<saliDisponibile.size();i++) {
-                        System.out.println((i + 1) + ". Sala " + saliDisponibile.get(i).getNrSala() + " (" + saliDisponibile.get(i).getTipSala() + ")");
-                    }
-                    int indexSala = scanner.nextInt() - 1;
-                    Sala salaAleasa = saliDisponibile.get(indexSala);
-
-                    System.out.println("Introduceti data si ora (format: an luna zi ora minut):");
-                    int anP = scanner.nextInt();
-                    int lunaP = scanner.nextInt();
-                    int ziP = scanner.nextInt();
-                    int oraP = scanner.nextInt();
-                    int minutP = scanner.nextInt();
-                    scanner.nextLine();
-
-                    java.time.LocalDateTime dataProgramarii = java.time.LocalDateTime.of(anP, lunaP, ziP, oraP, minutP);
-
-                    Programare programareNoua=new Programare(pacientLogat, medicAles, serviciuAles, salaAleasa, dataProgramarii);
-
-                    service.adaugaProgramare(programareNoua);
-                    System.out.println("Programare creata cu succes pentru data de: " + dataProgramarii);
+                    creareProgramare(pacientLogat);
                     break;
                 case 4:
-                    System.out.println("[In lucru - metoda4");
+                    vizualizareProgramari(pacientLogat);
                     break;
                 case 5:
-                    System.out.println("[In lucru - metoda5");
+                    anuleazaProgramare(pacientLogat);
                     break;
                 case 6:
-                    System.out.println("[In lucru - metoda6");
+                    platesteFacturi(pacientLogat);
                     break;
                 case 0:
                     System.out.println("Revenire");
@@ -482,7 +442,235 @@ public class MeniuInteractiv {
         } while(choice!=0);
     }
 
-    public void meniuMedic() {
+    //metode meniuPacient
+
+    private void veziMediciDisponibili() {
+        System.out.println("----Medici disponibili----");
+        List<Medic> medici=service.getMedici();
+
+        if(medici.isEmpty()) {
+            System.out.println("Nu exista medici inregistrati in clinica momentan");
+        }
+        else
+        {
+            for(Medic m : medici) {
+                System.out.println("-" + m.getPrezentarePublica());
+            }
+        }
+    }
+
+    private void vizualizareFisaMedicala(Pacient pacientLogat) {
+        System.out.println("Fisa Medicala - " + pacientLogat.getNume() + " " + pacientLogat.getPrenume());
+        System.out.println("---------------");
+        System.out.println("Grupa sanguina: " + pacientLogat.getGrupaSanguina());
+        System.out.println("Alegii cunoscute: " + (pacientLogat.getIstoricAlergii().isEmpty() ? "Niciuna" : pacientLogat.getIstoricAlergii()));
+
+        FisaMedicala fm=pacientLogat.getFisaMedicala();
+
+        System.out.println("----Istoric programari----");
+        List<Programare> istoric=fm.getIstoricProgramari();
+
+        if(istoric.isEmpty()) {
+            System.out.println("Nu exista programari inregistrate");
+        }
+        else {
+            for(Programare prog : istoric) {
+                System.out.println("- [" + prog.getStatus() + "] " + prog.getDataSiOra().toLocalDate() +
+                        " | Medic: Dr. " + prog.getMedic().getNume() +
+                        " | Serviciu: " + prog.getServiciu().getNumeServiciu());
+            }
+        }
+
+        System.out.println("----Retete prescrise----");
+        List<Reteta> retete=fm.getRetetePrescrise();
+
+        if(retete.isEmpty())
+        {
+            System.out.println("Nu exista retete eliberate");
+        }
+        else {
+            for(Reteta r : retete) {
+                System.out.println(r);
+                System.out.println(" Medicamente ");
+                for(Medicament m : r.getMedicamente()) {
+                    System.out.println(" -" + m);
+                }
+                System.out.println("----------");
+            }
+        }
+    }
+
+    private void creareProgramare(Pacient pacientLogat) {
+        System.out.println("----Creare programare noua----");
+        System.out.println("Alegeti medicul: ");
+        List<Medic> mediciDisponibili=service.getMedici();
+        List<ServiciuMedical> serviciiDisponibile=service.getServicii();
+        List<Sala> saliDisponibile=service.getSali();
+
+        if (mediciDisponibili.isEmpty() || serviciiDisponibile.isEmpty() || saliDisponibile.isEmpty()) {
+            System.out.println("Ne cerem scuze, momentan clinica nu are toate resursele (medici/servicii/sali) configurate.");
+            return;
+        }
+
+        for(int i=0;i<mediciDisponibili.size();i++)
+        {
+            System.out.println((i + 1) + ". " + mediciDisponibili.get(i).getNume() + " - " + mediciDisponibili.get(i).getPrenume() + " - " + mediciDisponibili.get(i).getSpecializare());
+        }
+        int indexMedic=scanner.nextInt()-1;
+        Medic medicAles=mediciDisponibili.get(indexMedic);
+
+        System.out.println("Alegeti serviciul medical:");
+
+        for (int i=0;i<serviciiDisponibile.size();i++) {
+            System.out.println((i + 1) + ". " + serviciiDisponibile.get(i).getNumeServiciu() + " (" + serviciiDisponibile.get(i).getPret() + " RON)");
+        }
+        int indexServiciu = scanner.nextInt() - 1;
+        ServiciuMedical serviciuAles = serviciiDisponibile.get(indexServiciu);
+
+        System.out.println("Alegeti sala:");
+
+        for (int i=0;i<saliDisponibile.size();i++) {
+            System.out.println((i + 1) + ". Sala " + saliDisponibile.get(i).getNrSala() + " (" + saliDisponibile.get(i).getTipSala() + ")");
+        }
+        int indexSala = scanner.nextInt() - 1;
+        Sala salaAleasa = saliDisponibile.get(indexSala);
+
+        System.out.println("Introduceti data si ora (format: an luna zi ora minut):");
+        int anP = scanner.nextInt();
+        int lunaP = scanner.nextInt();
+        int ziP = scanner.nextInt();
+        int oraP = scanner.nextInt();
+        int minutP = scanner.nextInt();
+        scanner.nextLine();
+
+        java.time.LocalDateTime dataProgramarii = java.time.LocalDateTime.of(anP, lunaP, ziP, oraP, minutP);
+
+        Programare programareNoua=new Programare(pacientLogat, medicAles, serviciuAles, salaAleasa, dataProgramarii);
+
+        service.adaugaProgramare(programareNoua);
+        System.out.println("Programare creata cu succes pentru data de: " + dataProgramarii);
+    }
+
+    private void vizualizareProgramari(Pacient pacientLogat) {
+        System.out.println("----Lista programari----");
+        List<Programare> programari = pacientLogat.getFisaMedicala().getIstoricProgramari();
+
+        if(programari.isEmpty())
+        {
+            System.out.println("Nu s-a efectuat nicio programare");
+        }
+        else {
+            for (Programare prog : programari) {
+                System.out.println("- Data: " + prog.getDataSiOra().toLocalDate() +
+                        " | Ora: " + prog.getDataSiOra().toLocalTime() +
+                        " | Medic: Dr. " + prog.getMedic().getNume() +
+                        " | Serviciu: " + prog.getServiciu().getNumeServiciu() +
+                        " | Status: [" + prog.getStatus() + "]");
+            }
+        }
+    }
+    private void anuleazaProgramare(Pacient pacientLogat) {
+        System.out.println("----Anulare programare----");
+        List<Programare> programari = pacientLogat.getFisaMedicala().getIstoricProgramari();
+        List<Programare> programariAnulabile=new ArrayList<>();
+
+        for(Programare prog : programari) {
+            if(prog.getStatus().equals(Programare.STATUS_IN_ASTEPTARE) || prog.getStatus().equals(Programare.STATUS_CONFIRMATA)) {
+                programariAnulabile.add(prog);
+            }
+        }
+        if (programariAnulabile.isEmpty())
+        {
+            System.out.println("Nu aveti nicio programare care poate fi anulata");
+            return;
+        }
+        System.out.println("Alegeti numarul programarii pe care doriti sa o anulati: ");
+        for(int i=0;i<programariAnulabile.size();i++) {
+            Programare prog=programariAnulabile.get(i);
+            System.out.println((i + 1) + ". Data: " + prog.getDataSiOra().toLocalDate() +
+                    " | Ora: " + prog.getDataSiOra().toLocalTime() +
+                    " | Medic: Dr. " + prog.getMedic().getNume());
+        }
+        System.out.println("0. Inapoi");
+
+        System.out.println("Alegerea dumneavoastra: ");
+        int index=-1;
+        if(scanner.hasNextInt()) {
+            index= scanner.nextInt();
+            scanner.nextLine();
+        }
+
+        if(index>0 && index<=programariAnulabile.size()) {
+            Programare progDeAnulat=programariAnulabile.get(index-1);
+            progDeAnulat.setStatus(Programare.STATUS_ANULATA);
+            System.out.println("Programarea a fost anulata cu succes!");
+        }
+        else
+        {
+            System.out.println("Optiune invalida");
+        }
+    }
+
+    private void platesteFacturi(Pacient pacientLogat) {
+        System.out.println("----Plata facturi----");
+
+        List<Factura> facturiDePlatit=new ArrayList<>();
+        for(Factura f : service.getFacturi()) {
+            if(f.getProgramare().getPacient().equals(pacientLogat) && f.getStatusPlata().equals(Factura.STATUS_PLATA_ASTEPTARE)) {
+                facturiDePlatit.add(f);
+            }
+        }
+        if(facturiDePlatit.isEmpty())
+        {
+            System.out.println("Nu mai sunt facturi de platit");
+            return;
+        }
+
+        System.out.println("Facturile dvs neplatite: ");
+        for(int i=0;i<facturiDePlatit.size();i++) {
+            Factura f=facturiDePlatit.get(i);
+            System.out.println((i + 1) + ". Factura #" + f.getIdFactura() +
+                    " | Serviciu: " + f.getProgramare().getServiciu().getNumeServiciu() +
+                    " | Suma: " + f.getPret() + " RON" +
+                    " | Data emiterii: " + f.getDataEmiterii());
+        }
+        System.out.println("0. Anuleaza");
+
+        System.out.println("Alegeti numarul facturii pe care doriti sa o platiti: ");
+        int alegere=-1;
+        if(scanner.hasNextInt()) {
+            alegere= scanner.nextInt();
+            scanner.nextLine();
+        }
+
+        if(alegere>0 && alegere<= facturiDePlatit.size()) {
+            Factura facturaAleasa=facturiDePlatit.get(alegere-1);
+            System.out.println("Se proceseaza plata pentru suma de " + facturaAleasa.getPret() + " RON aferenta facturii");
+            facturaAleasa.setStatusPlata(Factura.STATUS_PLATA_FINALIZATA);
+            System.out.println("Plata finalizata");
+        }
+        else
+        {
+            System.out.println("Optiune incorecta");
+        }
+    }
+    private void autentificareMedic() {
+        System.out.println("----Autentificare medic----");
+        System.out.println("Introduceti CNP-ul dvs");
+        String cnpIntrodus= scanner.nextLine();
+
+        Medic medicGasit=service.cautaMedicDupaCnp(cnpIntrodus);
+
+        if(medicGasit!=null) {
+            System.out.println("Autentificare cu succes");
+            meniuMedic(medicGasit);
+        }
+        else
+        {
+            System.out.println("Acces respins. CNP-ul introdus nu apartine niciunui medic inregistrat");
+        }
+    }
+    public void meniuMedic(Medic medicLogat) {
         int choice=-1;
         do {
             System.out.println("1. Vezi programarile de azi");
@@ -502,16 +690,16 @@ public class MeniuInteractiv {
 
             switch (choice) {
                 case 1:
-                    System.out.println("[In lucru - metoda1");
+                   veziProgramariAzi(medicLogat);
                     break;
                 case 2:
-                    System.out.println("[In lucru - metoda2");
+                    finalizeazaConsultatie(medicLogat);
                     break;
                 case 3:
-                    System.out.println("[In lucru - metoda3");
+                    elibereazaReteta(medicLogat);
                     break;
                 case 4:
-                    System.out.println("[In lucru - metoda4");
+                    emiteFactura(medicLogat);
                     break;
                 case 0:
                     System.out.println("Revenire");
@@ -521,5 +709,189 @@ public class MeniuInteractiv {
             }
 
         } while(choice!=0);
+    }
+
+    //metode meniuMedic
+    private void veziProgramariAzi(Medic medicLogat) {
+        System.out.println("----Programarile de astazi----");
+        java.time.LocalDate azi=java.time.LocalDate.now();
+
+        List<Programare> programari=service.getToateProgramarile();
+        boolean gasit=false;
+
+        for (Programare p : programari) {
+            if(p.getMedic().equals(medicLogat) && p.getDataSiOra().toLocalDate().equals(azi)) {
+                System.out.println("- Ora: " + p.getDataSiOra().toLocalTime() +
+                        " | Pacient: " + p.getPacient().getNume() + " " + p.getPacient().getPrenume() +
+                        " | Serviciu: " + p.getServiciu().getNumeServiciu() +
+                        " | Status: [" + p.getStatus() + "]");
+                gasit=true;
+            }
+        }
+        if(!gasit) {
+            System.out.println("Nu s-au gasit programari pentru data de azi, " + azi);
+        }
+    }
+
+    private void finalizeazaConsultatie(Medic medicLogat) {
+        System.out.println("----Finalizare consultatie----");
+        java.time.LocalDate azi = java.time.LocalDate.now();
+        List<Programare> programari = service.getToateProgramarile();
+        List<Programare> activeAzi = new ArrayList<>();
+
+        for(Programare p : programari) {
+            if (p.getMedic().equals(medicLogat) && p.getDataSiOra().toLocalDate().equals(azi) &&
+                    (p.getStatus().equals(Programare.STATUS_IN_ASTEPTARE) || p.getStatus().equals(Programare.STATUS_CONFIRMATA))) {
+                        activeAzi.add(p);
+            }
+        }
+
+        if(activeAzi.isEmpty()) {
+            System.out.println("Nu aveti consultatii active astazi");
+            return;
+        }
+        System.out.println("Alegeti pacientul a carui consultatie s-a incheiat:");
+        for (int i = 0; i < activeAzi.size(); i++) {
+            Programare p = activeAzi.get(i);
+            System.out.println((i + 1) + ". Ora: " + p.getDataSiOra().toLocalTime() +
+                    " | Pacient: " + p.getPacient().getNume() + " " + p.getPacient().getPrenume());
+        }
+        System.out.println("0. Inapoi");
+
+        System.out.print("Alegerea dvs: ");
+        int optiune = -1;
+        if (scanner.hasNextInt()) {
+            optiune = scanner.nextInt();
+            scanner.nextLine();
+        }
+
+        if (optiune > 0 && optiune <= activeAzi.size()) {
+            Programare selectata = activeAzi.get(optiune - 1);
+            selectata.setStatus(Programare.STATUS_FINALIZATA);
+
+            System.out.println("Consultatia pentru " + selectata.getPacient().getNume() + " a fost marcata ca finalizata");
+        } else {
+            System.out.println("Optiune invalida");
+        }
+    }
+
+    private void elibereazaReteta(Medic medicLogat) {
+        System.out.println("---Eliberare reteta---");
+
+        java.time.LocalDate azi=java.time.LocalDate.now();
+        List<Programare> programari= service.getToateProgramarile();
+        List<Programare> consultatiiIncheiate = new ArrayList<>();
+
+        for (Programare p : programari) {
+            if (p.getMedic().equals(medicLogat) && p.getDataSiOra().toLocalDate().equals(azi) && p.getStatus().equals(Programare.STATUS_FINALIZATA)) {
+                consultatiiIncheiate.add(p);
+            }
+        }
+        if (consultatiiIncheiate.isEmpty()) {
+            System.out.println("Nu aveti nicio consultatie finalizata astazi pentru care sa puteti elibera o reteta.");
+            return;
+        }
+
+        System.out.println("Selectati pacientul pentru reteta:");
+        for (int i=0;i<consultatiiIncheiate.size(); i++) {
+            Pacient pac=consultatiiIncheiate.get(i).getPacient();
+            System.out.println((i+1) + ". " + pac.getNume() + " " + pac.getPrenume());
+        }
+
+        System.out.print("Alegerea dumneavoastra: ");
+        int optiune=scanner.nextInt();
+        scanner.nextLine();
+
+        if (optiune<=0 || optiune>consultatiiIncheiate.size()) {
+            System.out.println("Optiune invalida");
+            return;
+        }
+
+        Pacient pacientAles=consultatiiIncheiate.get(optiune-1).getPacient();
+        Reteta retetaNoua=new Reteta(medicLogat, azi);
+        System.out.println("\nIntroduceti medicamentele (scrie 'gata' la nume pentru a termina):");
+
+        while(true) {
+            System.out.print("Nume medicament: ");
+            String numeM = scanner.nextLine();
+            if (numeM.equalsIgnoreCase("gata"))
+                break;
+
+            System.out.print("Dozaj (mg): ");
+            int dozaj=scanner.nextInt();
+            scanner.nextLine();
+
+            System.out.print("Substanta activa: ");
+            String substanta=scanner.nextLine();
+
+            Medicament m=new Medicament(numeM, dozaj, substanta);
+            retetaNoua.addMedicament(m);
+            System.out.println("-> Adaugat.");
+        }
+        if (!retetaNoua.getMedicamente().isEmpty()) {
+            pacientAles.getFisaMedicala().adaugaReteta(retetaNoua);
+            System.out.println("Reteta a fost salvata cu succes in fisa pacientului " + pacientAles.getNume());
+        } else {
+            System.out.println("⚠Reteta nu a fost creata deoarece nu ati adaugat niciun medicament.");
+        }
+    }
+    private void emiteFactura(Medic medicLogat) {
+        System.out.println("----Emitere factura----");
+
+        java.time.LocalDate azi=java.time.LocalDate.now();
+        List<Programare> programari=service.getToateProgramarile();
+
+        List<Factura> toateFacturile=service.getFacturi();
+        List<Programare> programariEligibile=new ArrayList<>();
+
+        for (Programare p : programari) {
+            if (p.getMedic().equals(medicLogat) && p.getDataSiOra().toLocalDate().equals(azi) && p.getStatus().equals(Programare.STATUS_FINALIZATA)) {
+
+                boolean areFactura = false;
+                for (Factura f : toateFacturile) {
+                    if (f.getProgramare().equals(p)) {
+                        areFactura = true;
+                        break;
+                    }
+                }
+
+                if (!areFactura) {
+                    programariEligibile.add(p);
+                }
+            }
+        }
+
+        if (programariEligibile.isEmpty()) {
+            System.out.println("Nu există nicio consultatie finalizata astazi care să necesite emiterea unei facturi.");
+            return;
+        }
+
+        System.out.println("Selectați pacientul pentru care emiteti factura:");
+        for (int i=0;i<programariEligibile.size();i++) {
+            Programare p=programariEligibile.get(i);
+            System.out.println((i+1) + ". Pacient: " + p.getPacient().getNume() + " " + p.getPacient().getPrenume() +
+                    " | Serviciu: " + p.getServiciu().getNumeServiciu());
+        }
+
+        System.out.print("Alegerea dumneavoastra: ");
+        int optiune=-1;
+        if (scanner.hasNextInt()) {
+            optiune=scanner.nextInt();
+            scanner.nextLine();
+        }
+
+        if (optiune>0 && optiune<=programariEligibile.size()) {
+            Programare selectata=programariEligibile.get(optiune-1);
+
+            double pretTotal=selectata.getServiciu().getPret() + medicLogat.getCostConsultatie();
+
+            Factura facturaNoua=new Factura(pretTotal, azi, selectata);
+            service.adaugaFactura(facturaNoua);
+
+            System.out.println("Factura #" + facturaNoua.getIdFactura() + " in valoare de " + pretTotal +
+                    " RON a fost emisa cu succes pentru pacientul " + selectata.getPacient().getNume());
+        } else {
+            System.out.println("Optiune invalida");
+        }
     }
 }

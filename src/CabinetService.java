@@ -9,6 +9,7 @@ public class CabinetService {
     private List<ServiciuMedical> servicii;
     private List<Sala> sali;
     private List<Programare> programari;
+    private List<Factura> facturi;
 
     public CabinetService() {
         this.medici = new ArrayList<>();
@@ -17,11 +18,11 @@ public class CabinetService {
         this.servicii = new ArrayList<>();
         this.sali = new ArrayList<>();
         this.programari = new ArrayList<>();
+        this.facturi=new ArrayList<>();
 
         populareDate();
     }
 
-    //Meniu administrator
     //Actiuni medici
 
     public void adaugaMedic(Medic medicNou) {
@@ -43,6 +44,21 @@ public class CabinetService {
         }
         return false;
     }
+
+    public Medic cautaMedicDupaCnp(String cnpCautat) {
+        for(Medic m : medici) {
+            if(m.getCnp().equals(cnpCautat)) {
+                return m;
+            }
+        }
+        return null;
+    }
+
+    public List<Programare> getToateProgramarile() {
+        return programari;
+    }
+
+    public void adaugaFactura(Factura f) { facturi.add(f); }
 
     //Actiuni asistenti
     public void adaugaAsistent(Asistent asistent) {
@@ -91,7 +107,11 @@ public class CabinetService {
         return sali;
     }
 
+    public List<Factura> getFacturi() { return facturi; }
+
     private void populareDate() {
+        LocalDate azi = LocalDate.now();
+
         Sala s1=new Sala(101, 1, "Consultatii");
         Sala s2=new Sala(201, 2, "Chirurgie");
         sali.add(s1);
@@ -133,13 +153,29 @@ public class CabinetService {
         asistenti.add(a1);
         asistenti.add(a2);
 
-        Programare prog1 = new Programare(p1, m1, serv1, s1, java.time.LocalDateTime.of(2026, 4, 25, 10, 30));
+        Programare prog1 = new Programare(p1, m1, serv1, s1, java.time.LocalDateTime.of(azi.getYear(), azi.getMonthValue(), azi.getDayOfMonth(), 10, 30));
         Programare prog2 = new Programare(p2, m2, serv2, s2, java.time.LocalDateTime.of(2026, 4, 26, 14, 0));
+        Programare prog3 = new Programare(p1, m3, serv1, s1, java.time.LocalDateTime.of(2026, 4, 10, 9, 0));
 
         programari.add(prog1);
         programari.add(prog2);
+        programari.add(prog3);
 
         p1.getFisaMedicala().adaugaProgramare(prog1);
         p2.getFisaMedicala().adaugaProgramare(prog2);
+        p1.getFisaMedicala().adaugaProgramare(prog3);
+
+        double suma1 = prog1.getMedic().getCostConsultatie() + prog1.getServiciu().getPret();
+        Factura f1 = new Factura(suma1, LocalDate.of(2026, 4, 25), prog1);
+
+        double suma2 = prog2.getMedic().getCostConsultatie() + prog2.getServiciu().getPret();
+        Factura f2 = new Factura(suma2, LocalDate.of(2026, 4, 26), prog2);
+
+        Factura f3 = new Factura(300.0, LocalDate.of(2026, 4, 10), prog3);
+        f3.setStatusPlata(Factura.STATUS_PLATA_FINALIZATA);
+
+        facturi.add(f1);
+        facturi.add(f2);
+        facturi.add(f3);
     }
 }

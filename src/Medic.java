@@ -36,6 +36,12 @@ public class Medic extends PersonalMedical{
         this.codParafa = codParafa;
     }
 
+    public String getPrezentarePublica() {
+        return "Dr. " + getNume() + " " + getPrenume() +
+                " | Specializare: " + specializare +
+                " | Cost consult: " + costConsultatie + " RON";
+    }
+
     @Override
     public String toString() {
         return "Dr. " + getNume() + " " + getPrenume() +
