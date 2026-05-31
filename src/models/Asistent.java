@@ -1,6 +1,8 @@
+package models;
+
 import java.time.LocalDate;
 
-public class Asistent extends PersonalMedical{
+public class Asistent extends PersonalMedical {
     private int idAsistent;
     private String gradProfesional;
     private boolean poateRecolta;
@@ -38,7 +40,7 @@ public class Asistent extends PersonalMedical{
 
     @Override
     public String toString() {
-        return "Asistent: " + getNume() + " " + getPrenume() +
+        return "models.Asistent: " + getNume() + " " + getPrenume() +
                 " | Nr. Telefon: " + getNrTelefon() +
                 " | Grad: " + gradProfesional +
                 " | Salariu: " + getSalariu() +

@@ -1,3 +1,5 @@
+package models;
+
 import java.time.LocalDateTime;
 
 public class Programare {
@@ -15,7 +17,20 @@ public class Programare {
     private LocalDateTime dataSiOra;
     private String status;
 
-    public Programare(Pacient pacient, Medic medic, Asistent asistent,ServiciuMedical serviciu, Sala sala, LocalDateTime dataSiOra) {
+    //constructor fara asistent
+    public Programare(Pacient pacient, Medic medic,ServiciuMedical serviciu, Sala sala, LocalDateTime dataSiOra) {
+        this.idProgramare=0;
+        this.pacient=pacient;
+        this.medic=medic;
+        this.asistent=null;
+        this.serviciu=serviciu;
+        this.sala=sala;
+        this.dataSiOra=dataSiOra;
+        this.status=STATUS_IN_ASTEPTARE;
+    }
+
+    //constructor cu asistent
+    public Programare(Pacient pacient, Medic medic, Asistent asistent, ServiciuMedical serviciu, Sala sala, LocalDateTime dataSiOra) {
         this.idProgramare=0;
         this.pacient=pacient;
         this.medic=medic;
@@ -80,8 +95,8 @@ public class Programare {
 
     @Override
     public String toString() {
-        return "Programare: " + dataSiOra.toLocalDate() + " | Ora: " + dataSiOra.toLocalTime() +
-                " | Pacient: " + pacient.getNume() + " " + pacient.getPrenume() +
-                " | Medic: Dr. " + medic.getNume() + " | Status: " + status;
+        return "models.Programare: " + dataSiOra.toLocalDate() + " | Ora: " + dataSiOra.toLocalTime() +
+                " | models.Pacient: " + pacient.getNume() + " " + pacient.getPrenume() +
+                " | models.Medic: Dr. " + medic.getNume() + " | Status: " + status;
     }
 }

@@ -1,3 +1,7 @@
+package service;
+
+import models.*;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -123,13 +127,13 @@ public class CabinetService {
         servicii.add(serv2);
 
         Medic m1 = new Medic("Popescu", "Ion", "1800101123456", "0722000000", 8500.0, "Zi",
-                LocalDate.of(2018, 5, 20), "Cardiologie", 250.0, "1729");
+                LocalDate.of(2018, 5, 20), "Cardiologie", 250.0, "1729", "parola1");
 
         Medic m2 = new Medic("Ionescu", "Maria", "2850505123456", "0733000000", 7200.0, "Noapte",
-                LocalDate.of(2020, 11, 10), "Ecografie", 150.0, "1092");
+                LocalDate.of(2020, 11, 10), "Ecografie", 150.0, "1092", "parola2");
 
         Medic m3 = new Medic("Andreescu", "Vasile", "1790909123456", "0744000000", 9000.0, "Zi",
-                LocalDate.of(2015, 2, 15), "Chirurgie", 400.0, "2909");
+                LocalDate.of(2015, 2, 15), "Chirurgie", 400.0, "2909", "parola3");
 
         adaugaMedic(m1);
         adaugaMedic(m2);
@@ -139,8 +143,8 @@ public class CabinetService {
         alergii1.add("Penicilina");
         alergii1.add("Polen");
 
-        Pacient p1 = new Pacient("Dumitru", "Andrei", "1950101123456", "0755111222", "A2", alergii1);
-        Pacient p2 = new Pacient("Stan", "Elena", "2980202123456", "0766333444", "01", null); // Fără alergii
+        Pacient p1 = new Pacient("Dumitru", "Andrei", "1950101123456", "0755111222", "A2", alergii1, "parola123");
+        Pacient p2 = new Pacient("Stan", "Elena", "2980202123456", "0766333444", "01", null, "parola12"); // Fără alergii
 
         pacienti.add(p1);
         pacienti.add(p2);

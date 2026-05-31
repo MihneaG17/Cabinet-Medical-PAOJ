@@ -1,9 +1,21 @@
+package models;
+
 public class Medicament {
+    private int idMedicament;
     private String nume;
     private int dozaj;
     private String substantaActiva;
 
     public Medicament(String nume, int dozaj, String substantaActiva) {
+        this.idMedicament=0;
+        this.nume=nume;
+        this.dozaj=dozaj;
+        this.substantaActiva=substantaActiva;
+    }
+
+    //constructor pentru citirea din baza de date
+    public Medicament(int idMedicament, String nume, int dozaj, String substantaActiva) {
+        this.idMedicament=idMedicament;
         this.nume=nume;
         this.dozaj=dozaj;
         this.substantaActiva=substantaActiva;

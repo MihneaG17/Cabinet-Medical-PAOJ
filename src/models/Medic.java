@@ -1,3 +1,5 @@
+package models;
+
 import java.time.LocalDate;
 
 public class Medic extends PersonalMedical{
@@ -5,22 +7,25 @@ public class Medic extends PersonalMedical{
     private String specializare;
     private double costConsultatie;
     private String codParafa;
+    private String parola;
 
-    public Medic(String nume, String prenume, String cnp, String nrTelefon, double salariu, String tura, LocalDate dataAngajarii, String specializare, double costConsultatie, String codParafa) {
+    public Medic(String nume, String prenume, String cnp, String nrTelefon, double salariu, String tura, LocalDate dataAngajarii, String specializare, double costConsultatie, String codParafa, String parola) {
         super(nume, prenume, cnp, nrTelefon, salariu, tura, dataAngajarii);
         this.idMedic=0;
         this.specializare=specializare;
         this.costConsultatie=costConsultatie;
         this.codParafa=codParafa;
+        this.parola=parola;
     }
 
     //constructor pentru baza de date
-    public Medic(int idMedic, String nume, String prenume, String cnp, String nrTelefon, double salariu, String tura, LocalDate dataAngajarii, String specializare, double costConsultatie, String codParafa) {
+    public Medic(int idMedic, String nume, String prenume, String cnp, String nrTelefon, double salariu, String tura, LocalDate dataAngajarii, String specializare, double costConsultatie, String codParafa, String parola) {
         super(nume, prenume, cnp, nrTelefon, salariu, tura, dataAngajarii);
         this.idMedic=idMedic;
         this.specializare=specializare;
         this.costConsultatie=costConsultatie;
         this.codParafa=codParafa;
+        this.parola=parola;
     }
 
     public String getSpecializare() {
@@ -45,6 +50,14 @@ public class Medic extends PersonalMedical{
 
     public void setCodParafa(String codParafa) {
         this.codParafa = codParafa;
+    }
+
+    public String getParola() {
+        return parola;
+    }
+
+    public void setParola(String parola) {
+        this.parola = parola;
     }
 
     public String getPrezentarePublica() {

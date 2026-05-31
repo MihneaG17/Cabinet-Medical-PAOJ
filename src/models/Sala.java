@@ -1,3 +1,5 @@
+package models;
+
 public class Sala {
     private int nrSala;
     private int etaj;

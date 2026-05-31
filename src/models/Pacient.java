@@ -1,3 +1,5 @@
+package models;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -6,8 +8,9 @@ public class Pacient extends Persoana {
     private String grupaSanguina;
     private List<String> istoricAlergii;
     private FisaMedicala fisaMedicala;
+    private String parola;
 
-    public Pacient(String nume, String prenume, String cnp, String nrTelefon, String grupaSanguina, List<String> istoricAlergii) {
+    public Pacient(String nume, String prenume, String cnp, String nrTelefon, String grupaSanguina, List<String> istoricAlergii, String parola) {
         super(nume, prenume, cnp, nrTelefon);
         this.idPacient=0;
         this.grupaSanguina=grupaSanguina;
@@ -17,10 +20,11 @@ public class Pacient extends Persoana {
             this.istoricAlergii = istoricAlergii;
         }
         this.fisaMedicala=new FisaMedicala();
+        this.parola=parola;
     }
 
     //constructor pentru baza de date in care retin si id-ul pacientului
-    public Pacient(int idPacient, String nume, String prenume, String cnp, String nrTelefon, String grupaSanguina, List<String> istoricAlergii) {
+    public Pacient(int idPacient, String nume, String prenume, String cnp, String nrTelefon, String grupaSanguina, List<String> istoricAlergii, String parola) {
         super(nume, prenume, cnp, nrTelefon);
         this.idPacient=idPacient;
         this.grupaSanguina=grupaSanguina;
@@ -30,6 +34,7 @@ public class Pacient extends Persoana {
             this.istoricAlergii = istoricAlergii;
         }
         this.fisaMedicala=new FisaMedicala();
+        this.parola=parola;
     }
 
     public String getGrupaSanguina() {
@@ -52,9 +57,12 @@ public class Pacient extends Persoana {
         this.istoricAlergii.add(alergie);
     }
 
+    public String getParola() { return parola; }
+    public void setParola(String parola) { this.parola = parola; }
+
     @Override
     public String toString() {
-        return "Pacient: " + getNume() + " " + getPrenume() +
+        return "models.Pacient: " + getNume() + " " + getPrenume() +
                 " | CNP: " + getCnp() +
                 " | Grupa: " + grupaSanguina +
                 " | Alergii: " + (istoricAlergii.isEmpty() ? "Niciuna" : istoricAlergii);

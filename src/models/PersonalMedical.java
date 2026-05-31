@@ -1,4 +1,5 @@
-import java.util.List;
+package models;
+
 import java.time.LocalDate;
 
 public abstract class PersonalMedical extends Persoana{

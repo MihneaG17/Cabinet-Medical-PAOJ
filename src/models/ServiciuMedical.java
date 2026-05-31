@@ -1,3 +1,5 @@
+package models;
+
 public class ServiciuMedical {
     private int idServiciu;
     private String numeServiciu;
