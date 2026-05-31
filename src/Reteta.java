@@ -3,11 +3,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Reteta {
+    private int idReteta;
     private Medic medic;
+    //? programare
     private List<Medicament> medicamente;
     private LocalDate dataEmiterii;
 
     public Reteta(Medic medic, LocalDate dataEmiterii) {
+        this.idReteta=0;
+        this.medic=medic;
+        this.dataEmiterii=dataEmiterii;
+        this.medicamente=new ArrayList<>();
+    }
+
+    //constructor pentru citirea din baza de date
+    public Reteta(int idReteta, Medic medic, LocalDate dataEmiterii) {
+        this.idReteta=idReteta;
         this.medic=medic;
         this.dataEmiterii=dataEmiterii;
         this.medicamente=new ArrayList<>();

@@ -1,11 +1,21 @@
 import java.time.LocalDate;
 
 public class Asistent extends PersonalMedical{
+    private int idAsistent;
     private String gradProfesional;
     private boolean poateRecolta;
 
     public Asistent(String nume, String prenume, String cnp, String nrTelefon, double salariu, String tura, LocalDate dataAngajarii, String gradProfesional, boolean poateRecolta) {
         super(nume, prenume, cnp, nrTelefon, salariu, tura, dataAngajarii);
+        this.idAsistent=0;
+        this.gradProfesional=gradProfesional;
+        this.poateRecolta=poateRecolta;
+    }
+
+    //constructor pentru baza de date
+    public Asistent(int idAsistent, String nume, String prenume, String cnp, String nrTelefon, double salariu, String tura, LocalDate dataAngajarii, String gradProfesional, boolean poateRecolta) {
+        super(nume, prenume, cnp, nrTelefon, salariu, tura, dataAngajarii);
+        this.idAsistent=idAsistent;
         this.gradProfesional=gradProfesional;
         this.poateRecolta=poateRecolta;
     }

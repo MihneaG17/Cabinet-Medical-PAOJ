@@ -1,19 +1,26 @@
 import java.time.LocalDate;
 
 public class Factura {
-    private static int contorIdFactura=1;
-
     public static final String STATUS_PLATA_ASTEPTARE = "In asteptare";
     public static final String STATUS_PLATA_FINALIZATA= "Finalizata";
 
+    private int idFactura;
     private double pret;
     private LocalDate dataEmiterii;
     private String statusPlata;
     private Programare programare;
-    private int idFactura;
+
 
     public Factura(double pret, LocalDate dataEmiterii, Programare programare) {
-        this.idFactura=contorIdFactura++;
+        this.idFactura=0;
+        this.dataEmiterii=dataEmiterii;
+        this.programare=programare;
+        this.statusPlata=STATUS_PLATA_ASTEPTARE;
+        this.pret=programare.getServiciu().getPret()+programare.getMedic().getCostConsultatie();
+    }
+
+    public Factura(int idFactura, double pret, LocalDate dataEmiterii, Programare programare) {
+        this.idFactura=idFactura;
         this.dataEmiterii=dataEmiterii;
         this.programare=programare;
         this.statusPlata=STATUS_PLATA_ASTEPTARE;

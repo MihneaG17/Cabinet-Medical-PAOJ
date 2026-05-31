@@ -2,12 +2,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Pacient extends Persoana {
+    private int idPacient;
     private String grupaSanguina;
     private List<String> istoricAlergii;
     private FisaMedicala fisaMedicala;
 
     public Pacient(String nume, String prenume, String cnp, String nrTelefon, String grupaSanguina, List<String> istoricAlergii) {
         super(nume, prenume, cnp, nrTelefon);
+        this.idPacient=0;
+        this.grupaSanguina=grupaSanguina;
+        if (istoricAlergii == null) {
+            this.istoricAlergii = new ArrayList<>();
+        } else {
+            this.istoricAlergii = istoricAlergii;
+        }
+        this.fisaMedicala=new FisaMedicala();
+    }
+
+    //constructor pentru baza de date in care retin si id-ul pacientului
+    public Pacient(int idPacient, String nume, String prenume, String cnp, String nrTelefon, String grupaSanguina, List<String> istoricAlergii) {
+        super(nume, prenume, cnp, nrTelefon);
+        this.idPacient=idPacient;
         this.grupaSanguina=grupaSanguina;
         if (istoricAlergii == null) {
             this.istoricAlergii = new ArrayList<>();

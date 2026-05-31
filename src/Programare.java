@@ -6,16 +6,32 @@ public class Programare {
     public static final String STATUS_ANULATA = "Anulata";
     public static final String STATUS_CONFIRMATA = "Confirmata";
 
+    private int idProgramare;
     private Pacient pacient;
     private Medic medic;
+    private Asistent asistent;
     private ServiciuMedical serviciu;
     private Sala sala;
     private LocalDateTime dataSiOra;
     private String status;
 
-    public Programare(Pacient pacient, Medic medic, ServiciuMedical serviciu, Sala sala, LocalDateTime dataSiOra) {
+    public Programare(Pacient pacient, Medic medic, Asistent asistent,ServiciuMedical serviciu, Sala sala, LocalDateTime dataSiOra) {
+        this.idProgramare=0;
         this.pacient=pacient;
         this.medic=medic;
+        this.asistent=asistent;
+        this.serviciu=serviciu;
+        this.sala=sala;
+        this.dataSiOra=dataSiOra;
+        this.status=STATUS_IN_ASTEPTARE;
+    }
+
+    //constructor pentru cand citesc din baza de date
+    public Programare(int idProgramare, Pacient pacient, Medic medic, Asistent asistent,ServiciuMedical serviciu, Sala sala, LocalDateTime dataSiOra) {
+        this.idProgramare=idProgramare;
+        this.pacient=pacient;
+        this.medic=medic;
+        this.asistent=asistent;
         this.serviciu=serviciu;
         this.sala=sala;
         this.dataSiOra=dataSiOra;
