@@ -22,7 +22,7 @@ public class ProgramareService implements GenericService<Programare> {
 
     @Override
     public void create(Programare entitate) {
-        String sql = "INSERT INTO Programari (id_pacient, id_medic, id_asistent, id_serviciu, nr_sala, data_ora, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Programari (id_pacient, id_medic, id_asistent, id_serviciu, nr_sala, data_si_ora, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DatabaseManager.getInstance().getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -55,17 +55,18 @@ public class ProgramareService implements GenericService<Programare> {
     @Override
     public List<Programare> readAll() {
         List<Programare> programari = new ArrayList<>();
+
+        List<Pacient> totiPacientii = PacientService.getInstance().readAll();
+        List<Medic> totiMedicii = MedicService.getInstance().readAll();
+        List<Asistent> totiAsistentii = AsistentService.getInstance().readAll();
+        List<ServiciuMedical> toateServiciile = ServiciuMedicalService.getInstance().readAll();
+        List<Sala> toateSalile = SalaService.getInstance().readAll();
+
         String sql = "SELECT * FROM Programari";
 
         try (Connection conn = DatabaseManager.getInstance().getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);
              ResultSet rs = pstmt.executeQuery()) {
-
-            List<Pacient> totiPacientii = PacientService.getInstance().readAll();
-            List<Medic> totiMedicii = MedicService.getInstance().readAll();
-            List<Asistent> totiAsistentii = AsistentService.getInstance().readAll();
-            List<ServiciuMedical> toateServiciile = ServiciuMedicalService.getInstance().readAll();
-            List<Sala> toateSalile = SalaService.getInstance().readAll();
 
             while (rs.next()) {
                 int idProgramare = rs.getInt("id_programare");
@@ -73,12 +74,12 @@ public class ProgramareService implements GenericService<Programare> {
                 int idMedic = rs.getInt("id_medic");
 
                 int idAsistent = rs.getInt("id_asistent");
-                boolean asistentIsNull = rs.wasNull(); //verific daca ultima coloana citita a fost null
+                boolean asistentIsNull = rs.wasNull();
 
                 int idServiciu = rs.getInt("id_serviciu");
                 int nrSala = rs.getInt("nr_sala");
 
-                Timestamp ts = rs.getTimestamp("data_ora");
+                Timestamp ts = rs.getTimestamp("data_si_ora");
                 LocalDateTime dataOra = (ts != null) ? ts.toLocalDateTime() : null;
                 String status = rs.getString("status");
 
@@ -93,7 +94,6 @@ public class ProgramareService implements GenericService<Programare> {
                 }
 
                 Programare programare = new Programare(idProgramare, pacient, medic, asistent, serviciu, sala, dataOra);
-
                 programare.setStatus(status);
 
                 programari.add(programare);
