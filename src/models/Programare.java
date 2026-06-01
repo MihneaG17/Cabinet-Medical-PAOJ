@@ -18,7 +18,7 @@ public class Programare {
     private String status;
 
     //constructor fara asistent
-    public Programare(Pacient pacient, Medic medic,ServiciuMedical serviciu, Sala sala, LocalDateTime dataSiOra) {
+    public Programare(Pacient pacient, Medic medic, ServiciuMedical serviciu, Sala sala, LocalDateTime dataSiOra) {
         this.idProgramare=0;
         this.pacient=pacient;
         this.medic=medic;
@@ -53,6 +53,10 @@ public class Programare {
         this.status=STATUS_IN_ASTEPTARE;
     }
 
+    public int getIdProgramare() {
+        return idProgramare;
+    }
+
     public Pacient getPacient() {
         return pacient;
     }
@@ -63,6 +67,14 @@ public class Programare {
 
     public void setMedic(Medic medic) {
         this.medic = medic;
+    }
+
+    public Asistent getAsistent() {
+        return asistent;
+    }
+
+    public void setAsistent(Asistent asistent) {
+        this.asistent = asistent;
     }
 
     public ServiciuMedical getServiciu() {

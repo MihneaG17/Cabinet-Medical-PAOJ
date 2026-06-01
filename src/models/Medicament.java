@@ -21,6 +21,10 @@ public class Medicament {
         this.substantaActiva=substantaActiva;
     }
 
+    public int getIdMedicament() {
+        return idMedicament;
+    }
+
     public String getNume() {
         return nume;
     }

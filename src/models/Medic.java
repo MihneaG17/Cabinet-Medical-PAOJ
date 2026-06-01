@@ -28,6 +28,10 @@ public class Medic extends PersonalMedical{
         this.parola=parola;
     }
 
+    public int getIdMedic() {
+        return idMedic;
+    }
+
     public String getSpecializare() {
         return specializare;
     }

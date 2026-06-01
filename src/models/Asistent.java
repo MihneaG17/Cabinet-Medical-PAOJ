@@ -22,6 +22,10 @@ public class Asistent extends PersonalMedical {
         this.poateRecolta=poateRecolta;
     }
 
+    public int getIdAsistent() {
+        return idAsistent;
+    }
+
     public String getGradProfesional() {
         return gradProfesional;
     }

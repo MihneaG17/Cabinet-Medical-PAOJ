@@ -29,7 +29,7 @@ public class MedicService implements GenericService<Medic>{
     //operatiile CRUD
     @Override
     public void create(Medic entitate) {
-        String sql="INSERT INTO Medici (cnp, nume, prenume, nr_telefon, salariu, tura, data_angajarii, specializare, cost_consultatie, cod_parafa, parola) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql="INSERT INTO Medici (cnp, nume, prenume, nr_telefon, salariu, tura, data_angajarii, specializare, cost_consultatie, cod_parafa, parola) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn=DatabaseManager.getInstance().getConnection();
              PreparedStatement pstmt=conn.prepareStatement(sql)) {
@@ -68,7 +68,6 @@ public class MedicService implements GenericService<Medic>{
             ResultSet rs=pstmt.executeQuery()) {
 
             while(rs.next()) {
-                // AM CORECTAT: Numele coloanelor din Oracle și tipurile de date din Java
                 int id = rs.getInt("id_medic");
                 String cnp = rs.getString("cnp");
                 String nume = rs.getString("nume");

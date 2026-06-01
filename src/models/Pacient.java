@@ -37,6 +37,10 @@ public class Pacient extends Persoana {
         this.parola=parola;
     }
 
+    public int getIdPacient() {
+        return idPacient;
+    }
+
     public String getGrupaSanguina() {
         return grupaSanguina;
     }
