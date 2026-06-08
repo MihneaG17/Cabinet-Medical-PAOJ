@@ -5,27 +5,27 @@ CREATE TABLE Sali (
 );
 
 CREATE TABLE Servicii_Medicale (
-                        id_serviciu NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-                        nume_serviciu VARCHAR2(100) NOT NULL,
-                        pret NUMBER(8, 2) NOT NULL,
-                        durata_minute NUMBER(3) NOT NULL
+                                   id_serviciu NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+                                   nume_serviciu VARCHAR2(100) NOT NULL,
+                                   pret NUMBER(8, 2) NOT NULL,
+                                   durata_minute NUMBER(3) NOT NULL
 );
 
 CREATE TABLE Medicamente (
-                        id_medicament NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-                        nume VARCHAR2(100) NOT NULL,
-                        dozaj NUMBER(4) NOT NULL,
-                        substanta_activa VARCHAR2(100) NOT NULL
+                             id_medicament NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+                             nume VARCHAR2(100) NOT NULL,
+                             dozaj NUMBER(4) NOT NULL,
+                             substanta_activa VARCHAR2(100) NOT NULL
 );
 
 CREATE TABLE Pacienti (
-                        id_pacient NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-                        cnp VARCHAR2(13) UNIQUE NOT NULL,
-                        nume VARCHAR2(50) NOT NULL,
-                        prenume VARCHAR2(50) NOT NULL,
-                        nr_telefon VARCHAR2(15),
-                        grupa_sanguina VARCHAR2(5),
-                        parola VARCHAR2(100) NOT NULL
+                          id_pacient NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+                          cnp VARCHAR2(13) UNIQUE NOT NULL,
+                          nume VARCHAR2(50) NOT NULL,
+                          prenume VARCHAR2(50) NOT NULL,
+                          nr_telefon VARCHAR2(15),
+                          grupa_sanguina VARCHAR2(5),
+                          parola VARCHAR2(100) NOT NULL
 );
 
 CREATE TABLE Medici (
@@ -66,11 +66,11 @@ CREATE TABLE Retete (
 );
 
 CREATE TABLE Medicament_Reteta (
-                        id_reteta NUMBER NOT NULL,
-                        id_medicament NUMBER NOT NULL,
-                        PRIMARY KEY (id_reteta, id_medicament),
-                        CONSTRAINT fk_mr_reteta FOREIGN KEY (id_reteta) REFERENCES Retete(id_reteta) ON DELETE CASCADE,
-                        CONSTRAINT fk_mr_medicament FOREIGN KEY (id_medicament) REFERENCES Medicamente(id_medicament) ON DELETE CASCADE
+                                   id_reteta NUMBER NOT NULL,
+                                   id_medicament NUMBER NOT NULL,
+                                   PRIMARY KEY (id_reteta, id_medicament),
+                                   CONSTRAINT fk_mr_reteta FOREIGN KEY (id_reteta) REFERENCES Retete(id_reteta) ON DELETE CASCADE,
+                                   CONSTRAINT fk_mr_medicament FOREIGN KEY (id_medicament) REFERENCES Medicamente(id_medicament) ON DELETE CASCADE
 );
 
 CREATE TABLE Programari (
@@ -96,4 +96,12 @@ CREATE TABLE Facturi (
                          data_emiterii DATE NOT NULL,
                          status_plata VARCHAR2(30) DEFAULT 'In asteptare',
                          CONSTRAINT fk_factura_programare FOREIGN KEY (id_programare) REFERENCES Programari(id_programare)
+);
+
+CREATE TABLE Retete_Medicamente (
+                                    id_reteta NUMBER NOT NULL,
+                                    id_medicament NUMBER NOT NULL,
+                                    PRIMARY KEY (id_reteta, id_medicament),
+                                    CONSTRAINT fk_rm_reteta FOREIGN KEY (id_reteta) REFERENCES Retete(id_reteta) ON DELETE CASCADE,
+                                    CONSTRAINT fk_rm_medicament FOREIGN KEY (id_medicament) REFERENCES Medicamente(id_medicament) ON DELETE CASCADE
 );
