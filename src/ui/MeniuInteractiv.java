@@ -99,6 +99,7 @@ public class MeniuInteractiv {
         PacientService.getInstance().create(pacientNou);
 
         System.out.println("Contul a fost creat cu succes!");
+        AuditService.getInstance().logAction("Inregistrare pacient nou");
     }
 
     private void autentificareAdmin() {
@@ -111,6 +112,7 @@ public class MeniuInteractiv {
 
         if(userInput.equals("mihnea") && parolaInput.equals("mihnea")) {
             System.out.println("Autentificare cu succes");
+            AuditService.getInstance().logAction("Autentificare utilizator");
             meniuAdmin();
         }
         else {
@@ -226,6 +228,7 @@ public class MeniuInteractiv {
                     Medic medicNou = new Medic(nume, prenume, cnp, telefon, salariu, tura, dataAngajarii, specializare, cost, parafa, parolaM);
 
                     MedicService.getInstance().create(medicNou);
+                    AuditService.getInstance().logAction("Adaugare angajat nou");
                     break;
                 case 2:
                     System.out.println("Lista medici:");
@@ -249,6 +252,7 @@ public class MeniuInteractiv {
                     if (medicGasit != null) {
                         MedicService.getInstance().delete(medicGasit.getIdMedic());
                         System.out.println("Medicul Dr. " + medicGasit.getNume() + " a fost concediat cu succes.");
+                        AuditService.getInstance().logAction("Concediere angajat");
                     } else {
                         System.out.println("Eroare: Nu s-a gasit niciun medic angajat cu CNP-ul introdus.");
                     }
@@ -325,6 +329,7 @@ public class MeniuInteractiv {
                             LocalDate.of(anAsistent, lunaAsistent, ziAsistent), grad, poateRecolta);
 
                     AsistentService.getInstance().create(asistentNou);
+                    AuditService.getInstance().logAction("Adaugare angajat nou");
 
                     break;
                 case 2:
@@ -351,6 +356,7 @@ public class MeniuInteractiv {
                     if (asistentGasit != null) {
                         AsistentService.getInstance().delete(asistentGasit.getIdAsistent());
                         System.out.println("Asistentul " + asistentGasit.getNume() + " " + asistentGasit.getPrenume() + " a fost concediat cu succes.");
+                        AuditService.getInstance().logAction("Concediere angajat");
                     } else {
                         System.out.println("Nu s-a gasit niciun asistent cu acest CNP.");
                     }
@@ -442,6 +448,7 @@ public class MeniuInteractiv {
             switch (choice) {
                 case 1:
                     System.out.println("--- Lista Sali ---");
+                    AuditService.getInstance().logAction("Vizualizare resurse clinica");
                     List<models.Sala> sali = SalaService.getInstance().readAll();
                     if(sali.isEmpty()) {
                         System.out.println("Nu exista sali inregistrate.");
@@ -455,6 +462,7 @@ public class MeniuInteractiv {
 
                 case 2:
                     System.out.println("--- Servicii Medicale ---");
+                    AuditService.getInstance().logAction("Vizualizare resurse clinica");
                     List<models.ServiciuMedical> servicii = ServiciuMedicalService.getInstance().readAll();
                     if(servicii.isEmpty()) {
                         System.out.println("Nu exista servicii inregistrate.");
@@ -469,6 +477,7 @@ public class MeniuInteractiv {
 
                 case 3:
                     System.out.println("--- Catalog Medicamente ---");
+                    AuditService.getInstance().logAction("Vizualizare resurse clinica");
                     List<models.Medicament> medicamente = MedicamentService.getInstance().readAll();
                     if(medicamente.isEmpty()) {
                         System.out.println("Nu exista medicamente inregistrate.");
@@ -506,6 +515,7 @@ public class MeniuInteractiv {
             if(pacientGasit.getParola().equals(parolaPacient))
             {
                 System.out.println("Autentificare cu succes!");
+                AuditService.getInstance().logAction("Autentificare utilizator");
                 meniuPacient(pacientGasit);
             }
             else {
@@ -590,6 +600,7 @@ public class MeniuInteractiv {
 
     private void vizualizareFisaMedicala(Pacient pacientLogat) {
         System.out.println("Fisa Medicala - " + pacientLogat.getNume() + " " + pacientLogat.getPrenume());
+        AuditService.getInstance().logAction("Vizualizare fisa medicala");
         System.out.println("---------------");
         System.out.println("Grupa sanguina: " + pacientLogat.getGrupaSanguina());
         System.out.println("Alegii cunoscute: " + (pacientLogat.getIstoricAlergii().isEmpty() ? "Niciuna" : String.join(", ", pacientLogat.getIstoricAlergii())));
@@ -746,6 +757,7 @@ public class MeniuInteractiv {
 
         ProgramareService.getInstance().create(programareNoua);
         System.out.println("Programare creata cu succes pentru data de: " + dataFinala + ", alocata in Sala " + salaAleasa.getNrSala() + ".");
+        AuditService.getInstance().logAction("Creare programare");
     }
 
     private void istoricFacturiComplete(Pacient pacientLogat) {
@@ -830,6 +842,7 @@ public class MeniuInteractiv {
             progDeAnulat.setStatus(Programare.STATUS_ANULATA);
             ProgramareService.getInstance().update(progDeAnulat);
             System.out.println("Programarea a fost anulata cu succes!");
+            AuditService.getInstance().logAction("Anulare programare");
         }
         else if(index!=0)
         {
@@ -883,6 +896,7 @@ public class MeniuInteractiv {
             FacturaService.getInstance().update(facturaAleasa);
 
             System.out.println("Plata finalizata cu succes");
+            AuditService.getInstance().logAction("Plata factura");
         } else if (alegere != 0) {
             System.out.println("Optiune incorecta");
         }
@@ -910,6 +924,7 @@ public class MeniuInteractiv {
 
             if(medicGasit.getParola().equals(parolaIntrodusa)) {
                 System.out.println("Autentificare cu succes!");
+                AuditService.getInstance().logAction("Autentificare utilizator");
                 meniuMedic(medicGasit);
             } else {
                 System.out.println("Parola incorecta. Acces respins.");
@@ -1048,6 +1063,7 @@ public class MeniuInteractiv {
             ProgramareService.getInstance().update(selectata);
 
             System.out.println("Consultatia pentru " + selectata.getPacient().getNume() + " a fost marcata ca finalizata");
+            AuditService.getInstance().logAction("Finalizare consultatie");
         } else if(optiune!=0){
             System.out.println("Optiune invalida");
         }
@@ -1135,8 +1151,9 @@ public class MeniuInteractiv {
         if (!retetaNoua.getMedicamente().isEmpty()) {
             RetetaService.getInstance().create(retetaNoua);
             System.out.println("Reteta a fost salvata cu succes in baza de date pentru pacientul " + pacientAles.getNume());
+            AuditService.getInstance().logAction("Eliberare reteta");
         } else {
-            System.out.println("⚠ Reteta nu a fost creata deoarece nu ati adaugat niciun medicament.");
+            System.out.println("Reteta nu a fost creata deoarece nu ati adaugat niciun medicament.");
         }
     }
     private void emiteFactura(Medic medicLogat) {
@@ -1196,6 +1213,7 @@ public class MeniuInteractiv {
             FacturaService.getInstance().create(facturaNoua);
 
             System.out.println("Factura in valoare de " + pretTotal + " RON a fost emisa cu succes pentru pacientul " + selectata.getPacient().getNume());
+            AuditService.getInstance().logAction("Emitere factura");
         } else {
             System.out.println("Optiune invalida");
         }
