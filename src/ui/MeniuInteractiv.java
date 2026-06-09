@@ -556,7 +556,7 @@ public class MeniuInteractiv {
     //metode meniuPacient
 
     private void veziMediciDisponibili() {
-        System.out.println("----Medici disponibili----");
+        System.out.println("Medici disponibili");
         List<Medic> medici=MedicService.getInstance().readAll();
 
         if(medici.isEmpty()) {
@@ -571,44 +571,52 @@ public class MeniuInteractiv {
     }
 
     private void vizualizareFisaMedicala(Pacient pacientLogat) {
-//        System.out.println("Fisa Medicala - " + pacientLogat.getNume() + " " + pacientLogat.getPrenume());
-//        System.out.println("---------------");
-//        System.out.println("Grupa sanguina: " + pacientLogat.getGrupaSanguina());
-//        System.out.println("Alegii cunoscute: " + (pacientLogat.getIstoricAlergii().isEmpty() ? "Niciuna" : pacientLogat.getIstoricAlergii()));
-//
-//        FisaMedicala fm=pacientLogat.getFisaMedicala();
-//
-//        System.out.println("----Istoric programari----");
-//        List<Programare> istoric=fm.getIstoricProgramari();
-//
-//        if(istoric.isEmpty()) {
-//            System.out.println("Nu exista programari inregistrate");
-//        }
-//        else {
-//            for(Programare prog : istoric) {
-//                System.out.println("- [" + prog.getStatus() + "] " + prog.getDataSiOra().toLocalDate() +
-//                        " | models.Medic: Dr. " + prog.getMedic().getNume() +
-//                        " | Serviciu: " + prog.getServiciu().getNumeServiciu());
-//            }
-//        }
-//
-//        System.out.println("----Retete prescrise----");
-//        List<Reteta> retete=fm.getRetetePrescrise();
-//
-//        if(retete.isEmpty())
-//        {
-//            System.out.println("Nu exista retete eliberate");
-//        }
-//        else {
-//            for(Reteta r : retete) {
-//                System.out.println(r);
-//                System.out.println(" Medicamente ");
-//                for(Medicament m : r.getMedicamente()) {
-//                    System.out.println(" -" + m);
-//                }
-//                System.out.println("----------");
-//            }
-//        }
+        System.out.println("Fisa Medicala - " + pacientLogat.getNume() + " " + pacientLogat.getPrenume());
+        System.out.println("---------------");
+        System.out.println("Grupa sanguina: " + pacientLogat.getGrupaSanguina());
+        System.out.println("Alegii cunoscute: " + (pacientLogat.getIstoricAlergii().isEmpty() ? "Niciuna" : String.join(", ", pacientLogat.getIstoricAlergii())));
+
+        System.out.println("----Istoric programari----");
+        List<Programare> istoric = new ArrayList<>();
+        for (Programare p : ProgramareService.getInstance().readAll()) {
+            if (p.getPacient().getIdPacient() == pacientLogat.getIdPacient()) {
+                istoric.add(p);
+            }
+        }
+
+        if(istoric.isEmpty()) {
+            System.out.println("Nu exista programari inregistrate");
+        }
+        else {
+            for(Programare prog : istoric) {
+                System.out.println("- [" + prog.getStatus() + "] " + prog.getDataSiOra().toLocalDate() +
+                        " | Medic: Dr. " + prog.getMedic().getNume() +
+                        " | Serviciu: " + prog.getServiciu().getNumeServiciu());
+            }
+        }
+
+        System.out.println("----Retete prescrise----");
+        List<Reteta> retete = new ArrayList<>();
+        for (Reteta r : RetetaService.getInstance().readAll()) {
+            if (r.getPacient().getIdPacient() == pacientLogat.getIdPacient()) {
+                retete.add(r);
+            }
+        }
+
+        if(retete.isEmpty())
+        {
+            System.out.println("Nu exista retete eliberate");
+        }
+        else {
+            for(Reteta r : retete) {
+                System.out.println(r);
+                System.out.println(" Medicamente ");
+                for(Medicament m : r.getMedicamente()) {
+                    System.out.println(" -" + m);
+                }
+                System.out.println("----------");
+            }
+        }
     }
 
     private void creareProgramare(Pacient pacientLogat) {
@@ -766,6 +774,9 @@ public class MeniuInteractiv {
             alegere = scanner.nextInt();
             scanner.nextLine();
         }
+        else {
+            scanner.next();
+        }
 
         if (alegere > 0 && alegere <= facturiDePlatit.size()) {
             Factura facturaAleasa = facturiDePlatit.get(alegere - 1);
@@ -815,9 +826,10 @@ public class MeniuInteractiv {
         int choice=-1;
         do {
             System.out.println("1. Vezi programarile de azi");
-            System.out.println("2. Finalizeaza o consultatie");
-            System.out.println("3. Elibereaza o reteta");
-            System.out.println("4. Emite factura");
+            System.out.println("2. Vezi toate programarile");
+            System.out.println("3. Finalizeaza o consultatie");
+            System.out.println("4. Elibereaza o reteta");
+            System.out.println("5. Emite factura");
             System.out.println("0. Revenire");
 
             if (scanner.hasNextInt()) {
@@ -832,14 +844,16 @@ public class MeniuInteractiv {
             switch (choice) {
                 case 1:
                    veziProgramariAzi(medicLogat);
-                    break;
+                   break;
                 case 2:
+                    veziToateProgramarile(medicLogat);
+                case 3:
                     finalizeazaConsultatie(medicLogat);
                     break;
-                case 3:
+                case 4:
                     elibereazaReteta(medicLogat);
                     break;
-                case 4:
+                case 5:
                     emiteFactura(medicLogat);
                     break;
                 case 0:
@@ -871,6 +885,28 @@ public class MeniuInteractiv {
         }
         if(!gasit) {
             System.out.println("Nu s-au gasit programari pentru data de azi, " + azi);
+        }
+    }
+
+    private void veziToateProgramarile(Medic medicLogat) {
+        System.out.println("---- Toate programarile (Istoric complet) ----");
+
+        List<Programare> toateProgramarile = ProgramareService.getInstance().readAll();
+        boolean gasit = false;
+
+        for (Programare p : toateProgramarile) {
+            if (p.getMedic().getIdMedic() == medicLogat.getIdMedic()) {
+                System.out.println("- Data: " + p.getDataSiOra().toLocalDate() +
+                        " | Ora: " + p.getDataSiOra().toLocalTime() +
+                        " | Pacient: " + p.getPacient().getNume() + " " + p.getPacient().getPrenume() +
+                        " | Serviciu: " + p.getServiciu().getNumeServiciu() +
+                        " | Status: [" + p.getStatus() + "]");
+                gasit = true;
+            }
+        }
+
+        if (!gasit) {
+            System.out.println("Nu s-au gasit programari in istoric pentru dvs.");
         }
     }
 
@@ -920,64 +956,90 @@ public class MeniuInteractiv {
     }
 
     private void elibereazaReteta(Medic medicLogat) {
-//        System.out.println("---Eliberare reteta---");
-//
-//        java.time.LocalDate azi=java.time.LocalDate.now();
-//        List<Programare> programari= service.getToateProgramarile();
-//        List<Programare> consultatiiIncheiate = new ArrayList<>();
-//
-//        for (Programare p : programari) {
-//            if (p.getMedic().equals(medicLogat) && p.getDataSiOra().toLocalDate().equals(azi) && p.getStatus().equals(Programare.STATUS_FINALIZATA)) {
-//                consultatiiIncheiate.add(p);
-//            }
-//        }
-//        if (consultatiiIncheiate.isEmpty()) {
-//            System.out.println("Nu aveti nicio consultatie finalizata astazi pentru care sa puteti elibera o reteta.");
-//            return;
-//        }
-//
-//        System.out.println("Selectati pacientul pentru reteta:");
-//        for (int i=0;i<consultatiiIncheiate.size(); i++) {
-//            Pacient pac=consultatiiIncheiate.get(i).getPacient();
-//            System.out.println((i+1) + ". " + pac.getNume() + " " + pac.getPrenume());
-//        }
-//
-//        System.out.print("Alegerea dumneavoastra: ");
-//        int optiune=scanner.nextInt();
-//        scanner.nextLine();
-//
-//        if (optiune<=0 || optiune>consultatiiIncheiate.size()) {
-//            System.out.println("Optiune invalida");
-//            return;
-//        }
-//
-//        Pacient pacientAles=consultatiiIncheiate.get(optiune-1).getPacient();
-//        Reteta retetaNoua=new Reteta(medicLogat, azi);
-//        System.out.println("\nIntroduceti medicamentele (scrie 'gata' la nume pentru a termina):");
-//
-//        while(true) {
-//            System.out.print("Nume medicament: ");
-//            String numeM = scanner.nextLine();
-//            if (numeM.equalsIgnoreCase("gata"))
-//                break;
-//
-//            System.out.print("Dozaj (mg): ");
-//            int dozaj=scanner.nextInt();
-//            scanner.nextLine();
-//
-//            System.out.print("Substanta activa: ");
-//            String substanta=scanner.nextLine();
-//
-//            Medicament m=new Medicament(numeM, dozaj, substanta);
-//            retetaNoua.addMedicament(m);
-//            System.out.println("-> Adaugat.");
-//        }
-//        if (!retetaNoua.getMedicamente().isEmpty()) {
-//            pacientAles.getFisaMedicala().adaugaReteta(retetaNoua);
-//            System.out.println("models.Reteta a fost salvata cu succes in fisa pacientului " + pacientAles.getNume());
-//        } else {
-//            System.out.println("⚠models.Reteta nu a fost creata deoarece nu ati adaugat niciun medicament.");
-//        }
+        System.out.println("---Eliberare reteta---");
+
+        java.time.LocalDate azi = java.time.LocalDate.now();
+        List<Programare> toateProgramarile = ProgramareService.getInstance().readAll();
+        List<Programare> consultatiiIncheiate = new ArrayList<>();
+
+        for (Programare p : toateProgramarile) {
+            if (p.getMedic().getIdMedic() == medicLogat.getIdMedic() 
+                && p.getDataSiOra().toLocalDate().equals(azi) 
+                && p.getStatus().equals(Programare.STATUS_FINALIZATA)) {
+                consultatiiIncheiate.add(p);
+            }
+        }
+        if (consultatiiIncheiate.isEmpty()) {
+            System.out.println("Nu aveti nicio consultatie finalizata astazi pentru care sa puteti elibera o reteta.");
+            return;
+        }
+
+        System.out.println("Selectati pacientul pentru reteta:");
+        for (int i = 0; i < consultatiiIncheiate.size(); i++) {
+            Pacient pac = consultatiiIncheiate.get(i).getPacient();
+            System.out.println((i + 1) + ". " + pac.getNume() + " " + pac.getPrenume());
+        }
+        System.out.println("0. Inapoi");
+
+        System.out.print("Alegerea dumneavoastra: ");
+        int optiune = -1;
+        if (scanner.hasNextInt()) {
+            optiune = scanner.nextInt();
+            scanner.nextLine();
+        } else {
+            scanner.next();
+        }
+
+        if (optiune <= 0 || optiune > consultatiiIncheiate.size()) {
+            if (optiune != 0) {
+                System.out.println("Optiune invalida");
+            }
+            return;
+        }
+
+        Pacient pacientAles = consultatiiIncheiate.get(optiune - 1).getPacient();
+        Reteta retetaNoua = new Reteta(medicLogat, pacientAles, azi);
+
+        List<Medicament> catalogMedicamente = MedicamentService.getInstance().readAll();
+        if (catalogMedicamente.isEmpty()) {
+            System.out.println("Nu exista medicamente in catalog. Nu se poate elibera reteta.");
+            return;
+        }
+
+        System.out.println("\nCatalog medicamente disponibile:");
+        for (int i = 0; i < catalogMedicamente.size(); i++) {
+            Medicament m = catalogMedicamente.get(i);
+            System.out.println((i + 1) + ". " + m.getNume() + " " + m.getDozaj() + "mg | Substanta: " + m.getSubstantaActiva());
+        }
+
+        System.out.println("\nIntroduceti numarul din lista al medicamentului pentru a-l adauga (0 pentru 'Gata'):");
+        while (true) {
+            System.out.print("Alegere medicament: ");
+            int indexMed = -1;
+            if (scanner.hasNextInt()) {
+                indexMed = scanner.nextInt();
+                scanner.nextLine();
+            } else {
+                scanner.next();
+            }
+
+            if (indexMed == 0) {
+                break;
+            } else if (indexMed > 0 && indexMed <= catalogMedicamente.size()) {
+                Medicament medicamentAles = catalogMedicamente.get(indexMed - 1);
+                retetaNoua.addMedicament(medicamentAles);
+                System.out.println("-> " + medicamentAles.getNume() + " a fost adaugat.");
+            } else {
+                System.out.println("Optiune invalida. Mai incercati sau apasati 0 pentru a termina.");
+            }
+        }
+
+        if (!retetaNoua.getMedicamente().isEmpty()) {
+            RetetaService.getInstance().create(retetaNoua);
+            System.out.println("Reteta a fost salvata cu succes in baza de date pentru pacientul " + pacientAles.getNume());
+        } else {
+            System.out.println("⚠ Reteta nu a fost creata deoarece nu ati adaugat niciun medicament.");
+        }
     }
     private void emiteFactura(Medic medicLogat) {
         System.out.println("----Emitere factura----");
@@ -1023,6 +1085,9 @@ public class MeniuInteractiv {
         if (scanner.hasNextInt()) {
             optiune = scanner.nextInt();
             scanner.nextLine();
+        }
+        else {
+            scanner.next();
         }
 
         if (optiune > 0 && optiune <= programariEligibile.size()) {

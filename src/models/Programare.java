@@ -107,7 +107,7 @@ public class Programare {
 
     @Override
     public String toString() {
-        return "models.Programare: " + dataSiOra.toLocalDate() + " | Ora: " + dataSiOra.toLocalTime() +
+        return "Programare: " + dataSiOra.toLocalDate() + " | Ora: " + dataSiOra.toLocalTime() +
                 " | models.Pacient: " + pacient.getNume() + " " + pacient.getPrenume() +
                 " | models.Medic: Dr. " + medic.getNume() + " | Status: " + status;
     }
