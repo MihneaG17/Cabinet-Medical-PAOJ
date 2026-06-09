@@ -284,29 +284,31 @@ public class MeniuInteractiv {
 
                     break;
                 case 2:
-//                    System.out.println("Lista asistenti");
-//                    List<Asistent> asistenti=service.getAsistenti();
-//
-//                    if(asistenti.isEmpty())
-//                    {
-//                        System.out.println("Nu e niciun asistent inregistrat in sistem");
-//                    }
-//                    else {
-//                        for(Asistent a : asistenti) {
-//                            System.out.println(a);
-//                        }
-//                    }
+                    System.out.println("Lista asistenti");
+                    List<Asistent> asistenti=AsistentService.getInstance().readAll();
+
+                    if(asistenti.isEmpty())
+                    {
+                        System.out.println("Nu e niciun asistent inregistrat in sistem");
+                    }
+                    else {
+                        for(Asistent a : asistenti) {
+                            System.out.println(a);
+                        }
+                    }
                     break;
                 case 3:
                     System.out.println("Concediere asistent");
-                    System.out.println("Introduceti cnp-ul asistentului");
-                    String cnpCautatAsistent=scanner.nextLine();
+                    System.out.println("Introduceti CNP-ul asistentului:");
+                    String cnpCautatAsistent = scanner.nextLine();
 
-                    if(service.concediazaAsistent(cnpCautatAsistent)) {
-                        System.out.println("Asistentul a fost concediat");
-                    }
-                    else {
-                        System.out.println("Nu s-a gasit niciun angajat cu acest cnp");
+                    Asistent asistentGasit = AsistentService.getInstance().cautaDupaCnp(cnpCautatAsistent);
+
+                    if (asistentGasit != null) {
+                        AsistentService.getInstance().delete(asistentGasit.getIdAsistent());
+                        System.out.println("Asistentul " + asistentGasit.getNume() + " " + asistentGasit.getPrenume() + " a fost concediat cu succes.");
+                    } else {
+                        System.out.println("Nu s-a gasit niciun asistent cu acest CNP.");
                     }
                     break;
                 case 0:
@@ -324,6 +326,7 @@ public class MeniuInteractiv {
             System.out.println("----Gestiune pacienti----");
             System.out.println("1. Inregistrare pacient nou");
             System.out.println("2. Cauta pacient dupa cnp");
+            System.out.println("3. Afiseaza toti pacientii");
             System.out.println("0. Inapoi");
 
             if (scanner.hasNextInt()) {
@@ -370,17 +373,28 @@ public class MeniuInteractiv {
 
                     break;
                 case 2:
-                    System.out.println("Cautare pacient dupa cnp");
-                    System.out.println("Introduceti cnp-ul cautat");
-                    String cnpPacientCautat=scanner.nextLine();
+                    System.out.println("Cautare pacient dupa CNP");
+                    System.out.println("Introduceti CNP-ul cautat:");
+                    String cnpPacientCautat = scanner.nextLine();
 
-                    Pacient gasit=service.cautaPacientDupaCnp(cnpPacientCautat);
+                    Pacient gasit = PacientService.getInstance().cautaDupaCnp(cnpPacientCautat);
 
-                    if(gasit!=null) {
+                    if (gasit != null) {
                         System.out.println(gasit);
+                    } else {
+                        System.out.println("Nu am gasit niciun pacient cu CNP-ul introdus.");
                     }
-                    else {
-                        System.out.println("Nu am gasit niciun pacient cu cnp-ul introdus");
+                    break;
+                case 3:
+                    System.out.println("Lista tuturor pacientilor");
+                    List<Pacient> listaPacienti = PacientService.getInstance().readAll();
+
+                    if (listaPacienti.isEmpty()) {
+                        System.out.println("Nu exista pacienti inregistrati in baza de date.");
+                    } else {
+                        for (Pacient p : listaPacienti) {
+                            System.out.println(p);
+                        }
                     }
                     break;
                 case 0:

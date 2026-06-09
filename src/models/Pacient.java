@@ -66,7 +66,7 @@ public class Pacient extends Persoana {
 
     @Override
     public String toString() {
-        return "models.Pacient: " + getNume() + " " + getPrenume() +
+        return "Pacient: " + getNume() + " " + getPrenume() +
                 " | CNP: " + getCnp() +
                 " | Grupa: " + grupaSanguina +
                 " | Alergii: " + (istoricAlergii.isEmpty() ? "Niciuna" : istoricAlergii);

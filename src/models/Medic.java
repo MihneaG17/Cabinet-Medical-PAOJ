@@ -73,6 +73,7 @@ public class Medic extends PersonalMedical{
     @Override
     public String toString() {
         return "Dr. " + getNume() + " " + getPrenume() +
+                " | CNP: " + getCnp() +
                 " | Nr. Telefon: " + getNrTelefon() +
                 " | Specializare: " + specializare +
                 " | Cost consult: " + costConsultatie + " RON" +

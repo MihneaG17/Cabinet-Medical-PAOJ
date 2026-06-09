@@ -44,7 +44,8 @@ public class Asistent extends PersonalMedical {
 
     @Override
     public String toString() {
-        return "models.Asistent: " + getNume() + " " + getPrenume() +
+        return "Asistent: " + getNume() + " " + getPrenume() +
+                " | CNP: " + getCnp() +
                 " | Nr. Telefon: " + getNrTelefon() +
                 " | Grad: " + gradProfesional +
                 " | Salariu: " + getSalariu() +
