@@ -1,10 +1,9 @@
-import service.CabinetService;
 import ui.MeniuInteractiv;
 
 public class Main {
     public static void main(String[] args) {
-        CabinetService service=new CabinetService();
-        MeniuInteractiv meniu=new MeniuInteractiv(service);
+        MeniuInteractiv meniu=new MeniuInteractiv();
+        meniu.ruleaza();
 
         meniu.ruleaza();
     }

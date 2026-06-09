@@ -10,11 +10,9 @@ import java.util.List;
 import java.util.Scanner;
 
 public class MeniuInteractiv {
-    private CabinetService service;
     private Scanner scanner;
 
-    public MeniuInteractiv(CabinetService service) {
-        this.service=service;
+    public MeniuInteractiv() {
         this.scanner=new Scanner(System.in);
     }
 
@@ -25,6 +23,7 @@ public class MeniuInteractiv {
             System.out.println("1. Logare ca administrator");
             System.out.println("2. Logare ca pacient");
             System.out.println("3. Logare ca medic");
+            System.out.println("4. Creare cont pacient nou");
             System.out.println("0. Iesire");
             System.out.println("Alegeti: ");
 
@@ -47,6 +46,9 @@ public class MeniuInteractiv {
                 case 3:
                     autentificareMedic();
                     break;
+                case 4:
+                    inregistrareContPacient();
+                    break;
                 case 0:
                     System.out.println("Deconectare");
                     break;
@@ -55,6 +57,48 @@ public class MeniuInteractiv {
             }
 
         } while(choice!=0);
+    }
+
+    //inregistrare cont pacient
+    private void inregistrareContPacient() {
+        System.out.println("---- Creare cont nou pacient ----");
+        System.out.print("Nume: ");
+        String numP = scanner.nextLine();
+
+        System.out.print("Prenume: ");
+        String preP = scanner.nextLine();
+
+        System.out.print("CNP: ");
+        String cnpP = scanner.nextLine();
+
+        Pacient existent = PacientService.getInstance().cautaDupaCnp(cnpP);
+        if (existent != null) {
+            System.out.println("Exista deja un cont inregistrat cu acest CNP. Va rugam sa va logati sau sa folositi alt CNP");
+            return;
+        }
+
+        System.out.print("Telefon: ");
+        String telP = scanner.nextLine();
+
+        System.out.print("Grupa sanguina: ");
+        String grupa = scanner.nextLine();
+
+        List<String> alergii = new ArrayList<>();
+        System.out.println("Introduceti alergiile (scrie 'gata' cand termini):");
+        while (true) {
+            String alergie = scanner.nextLine();
+            if (alergie.equalsIgnoreCase("gata"))
+                break;
+            alergii.add(alergie);
+        }
+
+        System.out.print("Alegeti o parola pentru cont: ");
+        String parolaP = scanner.nextLine();
+
+        Pacient pacientNou = new Pacient(numP, preP, cnpP, telP, grupa, alergii, parolaP);
+        PacientService.getInstance().create(pacientNou);
+
+        System.out.println("Contul a fost creat cu succes!");
     }
 
     private void autentificareAdmin() {
@@ -340,37 +384,7 @@ public class MeniuInteractiv {
 
             switch (choice) {
                 case 1:
-                    System.out.println("Inregistrare pacient");
-                    System.out.print("Nume: ");
-                    String numP = scanner.nextLine();
-
-                    System.out.print("Prenume: ");
-                    String preP = scanner.nextLine();
-
-                    System.out.print("CNP: ");
-                    String cnpP = scanner.nextLine();
-
-                    System.out.print("Telefon: ");
-                    String telP = scanner.nextLine();
-
-                    System.out.print("Grupa sanguina: ");
-                    String grupa = scanner.nextLine();
-
-                    List<String> alergii = new ArrayList<>();
-                    System.out.println("Introduceti alergiile (scrie 'gata' cand termini):");
-                    while (true) {
-                        String alergie = scanner.nextLine();
-                        if (alergie.equalsIgnoreCase("gata"))
-                            break;
-                        alergii.add(alergie);
-                    }
-
-                    System.out.print("Alegeti o parola pentru contul pacientului: ");
-                    String parolaP = scanner.nextLine();
-
-                    Pacient pacientNou = new Pacient(numP, preP, cnpP, telP, grupa, alergii, parolaP);
-                    PacientService.getInstance().create(pacientNou);
-
+                    inregistrareContPacient();
                     break;
                 case 2:
                     System.out.println("Cautare pacient dupa CNP");

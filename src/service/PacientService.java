@@ -8,30 +8,29 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 //singleton
-public class PacientService implements GenericService<Pacient>{
+public class PacientService implements GenericService<Pacient> {
     private static PacientService instance;
 
     private PacientService() {
     }
 
-    //metoda de acces la instanta
     public static PacientService getInstance() {
-        if(instance==null) {
-            instance=new PacientService();
+        if (instance == null) {
+            instance = new PacientService();
         }
         return instance;
     }
 
-    //operatiile CRUD
     @Override
     public void create(Pacient entitate) {
-        String sql="INSERT INTO Pacienti (cnp, nume, prenume, nr_telefon, grupa_sanguina, parola) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Pacienti (cnp, nume, prenume, nr_telefon, grupa_sanguina, parola, alergii) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-        try (Connection conn=DatabaseManager.getInstance().getConnection();
-             PreparedStatement pstmt=conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseManager.getInstance().getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, entitate.getCnp());
             pstmt.setString(2, entitate.getNume());
@@ -40,27 +39,30 @@ public class PacientService implements GenericService<Pacient>{
             pstmt.setString(5, entitate.getGrupaSanguina());
             pstmt.setString(6, entitate.getParola());
 
-            int rowsAffected=pstmt.executeUpdate();
+            String alergiiString = String.join(",", entitate.getIstoricAlergii());
+            pstmt.setString(7, alergiiString);
 
-            if(rowsAffected>0) {
-                System.out.println("(PacientService) Pacientul \" + entity.getNume() + \" a fost salvat cu succes în baza de date!");
+            int rowsAffected = pstmt.executeUpdate();
+
+            if (rowsAffected > 0) {
+                System.out.println("(PacientService) Pacientul " + entitate.getNume() + " a fost salvat cu succes în baza de date!");
             }
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             System.err.println("(PacientService) Eroare la inserarea pacientului in baza de date");
+            e.printStackTrace();
         }
     }
 
     @Override
     public List<Pacient> readAll() {
-        List<Pacient> pacienti=new ArrayList<>();
-        String sql="SELECT * FROM Pacienti";
+        List<Pacient> pacienti = new ArrayList<>();
+        String sql = "SELECT * FROM Pacienti";
 
-        try(Connection conn=DatabaseManager.getInstance().getConnection();
-        PreparedStatement pstmt=conn.prepareStatement(sql);
-            ResultSet rs=pstmt.executeQuery()) {
+        try (Connection conn = DatabaseManager.getInstance().getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
 
-            while(rs.next()) {
+            while (rs.next()) {
                 int id = rs.getInt("id_pacient");
                 String cnp = rs.getString("cnp");
                 String nume = rs.getString("nume");
@@ -69,13 +71,19 @@ public class PacientService implements GenericService<Pacient>{
                 String grupa = rs.getString("grupa_sanguina");
                 String parola = rs.getString("parola");
 
-                Pacient p = new Pacient(id, nume, prenume, cnp, telefon, grupa, new ArrayList<>(), parola);
+                String alergiiStr = rs.getString("alergii");
+                List<String> listaAlergii = new ArrayList<>();
+                if (alergiiStr != null && !alergiiStr.trim().isEmpty()) {
+                    listaAlergii = new ArrayList<>(Arrays.asList(alergiiStr.split(",")));
+                }
+
+                Pacient p = new Pacient(id, nume, prenume, cnp, telefon, grupa, listaAlergii, parola);
                 pacienti.add(p);
             }
 
         } catch (SQLException e) {
             System.err.println("(PacientService) Eroare la citirea pacienților.");
-            e.getMessage();
+            e.printStackTrace();
         }
         return pacienti;
     }
@@ -87,7 +95,7 @@ public class PacientService implements GenericService<Pacient>{
 
     @Override
     public void update(Pacient entitate) {
-        String sql = "UPDATE Pacienti SET nume = ?, prenume = ?, nr_telefon = ?, grupa_sanguina = ?, parola = ? WHERE id_pacient = ?";
+        String sql = "UPDATE Pacienti SET nume = ?, prenume = ?, nr_telefon = ?, grupa_sanguina = ?, parola = ?, alergii = ? WHERE id_pacient = ?";
         try (Connection conn = DatabaseManager.getInstance().getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
@@ -96,7 +104,11 @@ public class PacientService implements GenericService<Pacient>{
             pstmt.setString(3, entitate.getNrTelefon());
             pstmt.setString(4, entitate.getGrupaSanguina());
             pstmt.setString(5, entitate.getParola());
-            pstmt.setInt(6, entitate.getIdPacient());
+
+            String alergiiString = String.join(",", entitate.getIstoricAlergii());
+            pstmt.setString(6, alergiiString);
+
+            pstmt.setInt(7, entitate.getIdPacient());
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
@@ -129,14 +141,20 @@ public class PacientService implements GenericService<Pacient>{
     }
 
     public Pacient cautaDupaCnp(String cnpCautat) {
-        String sql="SELECT * FROM Pacienti WHERE cnp = ?";
+        String sql = "SELECT * FROM Pacienti WHERE cnp = ?";
 
-        try (Connection conn=DatabaseManager.getInstance().getConnection();
-        PreparedStatement pstmt=conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseManager.getInstance().getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, cnpCautat);
 
-            try (ResultSet rs=pstmt.executeQuery()) {
+            try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
+                    String alergiiStr = rs.getString("alergii");
+                    List<String> listaAlergii = new ArrayList<>();
+                    if (alergiiStr != null && !alergiiStr.trim().isEmpty()) {
+                        listaAlergii = new ArrayList<>(Arrays.asList(alergiiStr.split(",")));
+                    }
+
                     return new Pacient(
                             rs.getInt("id_pacient"),
                             rs.getString("nume"),
@@ -144,14 +162,14 @@ public class PacientService implements GenericService<Pacient>{
                             rs.getString("cnp"),
                             rs.getString("nr_telefon"),
                             rs.getString("grupa_sanguina"),
-                            new ArrayList<>(),
+                            listaAlergii,
                             rs.getString("parola")
                     );
                 }
             }
         } catch (SQLException e) {
             System.err.println("(PacientService) Eroare la cautarea pacientului dupa CNP");
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
         return null;
     }
