@@ -129,5 +129,22 @@ public class ProgramareService implements GenericService<Programare> {
 
     @Override
     public void delete(int id) {
+        String sql = "DELETE FROM Programari WHERE id_programare = ?";
+        try (Connection conn = DatabaseManager.getInstance().getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, id);
+
+            int rowsAffected = pstmt.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("(ProgramareService) Programarea cu ID-ul " + id + " a fost stearsa din baza de date.");
+            } else {
+                System.out.println("(ProgramareService) Nu s-a gasit nicio programare cu acest ID pentru a fi stearsa.");
+            }
+
+        } catch (SQLException e) {
+            System.err.println("(ProgramareService) Eroare la stergerea programarii.");
+            e.printStackTrace();
+        }
     }
 }

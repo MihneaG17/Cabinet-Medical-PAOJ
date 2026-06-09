@@ -87,12 +87,45 @@ public class PacientService implements GenericService<Pacient>{
 
     @Override
     public void update(Pacient entitate) {
+        String sql = "UPDATE Pacienti SET nume = ?, prenume = ?, nr_telefon = ?, grupa_sanguina = ?, parola = ? WHERE id_pacient = ?";
+        try (Connection conn = DatabaseManager.getInstance().getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
+            pstmt.setString(1, entitate.getNume());
+            pstmt.setString(2, entitate.getPrenume());
+            pstmt.setString(3, entitate.getNrTelefon());
+            pstmt.setString(4, entitate.getGrupaSanguina());
+            pstmt.setString(5, entitate.getParola());
+            pstmt.setInt(6, entitate.getIdPacient());
+
+            int rowsAffected = pstmt.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("(PacientService) Pacientul a fost actualizat cu succes.");
+            }
+        } catch (SQLException e) {
+            System.err.println("(PacientService) Eroare la actualizarea pacientului.");
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void delete(int id) {
+        String sql = "DELETE FROM Pacienti WHERE id_pacient = ?";
+        try (Connection conn = DatabaseManager.getInstance().getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
+            pstmt.setInt(1, id);
+
+            int rowsAffected = pstmt.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("(PacientService) Pacientul cu ID-ul " + id + " a fost sters din baza de date.");
+            } else {
+                System.out.println("(PacientService) Nu s-a gasit pacient cu acest ID pentru a fi sters.");
+            }
+        } catch (SQLException e) {
+            System.err.println("(PacientService) Eroare la stergerea pacientului.");
+            e.printStackTrace();
+        }
     }
 
     public Pacient cautaDupaCnp(String cnpCautat) {

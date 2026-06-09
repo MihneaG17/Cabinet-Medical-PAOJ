@@ -100,7 +100,29 @@ public class MedicService implements GenericService<Medic>{
 
     @Override
     public void update(Medic entitate) {
+        String sql = "UPDATE Medici SET nume = ?, prenume = ?, nr_telefon = ?, salariu = ?, tura = ?, specializare = ?, cost_consultatie = ?, cod_parafa = ?, parola = ? WHERE id_medic = ?";
+        try (Connection conn = DatabaseManager.getInstance().getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
+            pstmt.setString(1, entitate.getNume());
+            pstmt.setString(2, entitate.getPrenume());
+            pstmt.setString(3, entitate.getNrTelefon());
+            pstmt.setDouble(4, entitate.getSalariu());
+            pstmt.setString(5, entitate.getTura());
+            pstmt.setString(6, entitate.getSpecializare());
+            pstmt.setDouble(7, entitate.getCostConsultatie());
+            pstmt.setString(8, entitate.getCodParafa());
+            pstmt.setString(9, entitate.getParola());
+            pstmt.setInt(10, entitate.getIdMedic());
+
+            int rowsAffected = pstmt.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("(MedicService) Medicul a fost actualizat cu succes.");
+            }
+        } catch (SQLException e) {
+            System.err.println("(MedicService) Eroare la actualizarea medicului.");
+            e.printStackTrace();
+        }
     }
 
     @Override

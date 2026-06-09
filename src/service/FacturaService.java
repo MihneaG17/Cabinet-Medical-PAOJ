@@ -105,5 +105,22 @@ public class FacturaService implements GenericService<Factura> {
 
     @Override
     public void delete(int id) {
+        String sql = "DELETE FROM Facturi WHERE id_factura = ?";
+        try (Connection conn = DatabaseManager.getInstance().getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, id);
+
+            int rowsAffected = pstmt.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("(FacturaService) Factura cu ID-ul " + id + " a fost stearsa din baza de date.");
+            } else {
+                System.out.println("(FacturaService) Nu s-a gasit nicio factura cu acest ID pentru a fi stearsa.");
+            }
+
+        } catch (SQLException e) {
+            System.err.println("(FacturaService) Eroare la stergerea facturii.");
+            e.printStackTrace();
+        }
     }
 }

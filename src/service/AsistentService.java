@@ -97,9 +97,7 @@ public class AsistentService implements GenericService<Asistent> {
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
                     java.sql.Date sqlDate = rs.getDate("data_angajarii");
-                    LocalDate dataAngajarii = (sqlDate != null) ? sqlDate.toLocalDate() : null;
-
-                    boolean poateRecolta = rs.getInt("poate_recolta_probe") == 1;
+                    java.time.LocalDate dataAngajarii = (sqlDate != null) ? sqlDate.toLocalDate() : null;
 
                     return new Asistent(
                             rs.getInt("id_asistent"),
@@ -111,7 +109,7 @@ public class AsistentService implements GenericService<Asistent> {
                             rs.getString("tura"),
                             dataAngajarii,
                             rs.getString("grad_profesional"),
-                            poateRecolta
+                            rs.getInt("poate_recolta_probe") == 1
                     );
                 }
             }
@@ -129,9 +127,46 @@ public class AsistentService implements GenericService<Asistent> {
 
     @Override
     public void update(Asistent entitate) {
+        String sql = "UPDATE Asistenti SET nume = ?, prenume = ?, nr_telefon = ?, salariu = ?, tura = ?, grad_profesional = ?, poate_recolta_probe = ? WHERE id_asistent = ?";
+        try (Connection conn = DatabaseManager.getInstance().getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, entitate.getNume());
+            pstmt.setString(2, entitate.getPrenume());
+            pstmt.setString(3, entitate.getNrTelefon());
+            pstmt.setDouble(4, entitate.getSalariu());
+            pstmt.setString(5, entitate.getTura());
+            pstmt.setString(6, entitate.getGradProfesional());
+            pstmt.setInt(7, entitate.isPoateRecolta() ? 1 : 0);
+            pstmt.setInt(8, entitate.getIdAsistent());
+
+            int rowsAffected = pstmt.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("(AsistentService) Asistentul a fost actualizat cu succes.");
+            }
+        } catch (SQLException e) {
+            System.err.println("(AsistentService) Eroare la actualizarea asistentului.");
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void delete(int id) {
+        String sql = "DELETE FROM Asistenti WHERE id_asistent = ?";
+        try (Connection conn = DatabaseManager.getInstance().getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, id);
+
+            int rowsAffected = pstmt.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("(AsistentService) Asistentul cu ID-ul " + id + " a fost sters din baza de date.");
+            } else {
+                System.out.println("(AsistentService) Nu s-a gasit asistent cu acest ID pentru a fi sters.");
+            }
+        } catch (SQLException e) {
+            System.err.println("(AsistentService) Eroare la stergerea asistentului.");
+            e.printStackTrace();
+        }
     }
 }
