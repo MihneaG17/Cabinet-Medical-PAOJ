@@ -28,6 +28,14 @@ public class Reteta {
         this.medicamente=new ArrayList<>();
     }
 
+    public int getIdReteta() {
+        return idReteta;
+    }
+
+    public void setIdReteta(int idReteta) {
+        this.idReteta = idReteta;
+    }
+
     public Medic getMedic() {
         return medic;
     }
