@@ -29,6 +29,15 @@ public class Factura {
         this.pret=programare.getServiciu().getPret()+programare.getMedic().getCostConsultatie();
     }
 
+    //constructor cu status pentru citirea din baza de date
+    public Factura(int idFactura, double pret, LocalDate dataEmiterii, Programare programare, String status) {
+        this.idFactura=idFactura;
+        this.dataEmiterii=dataEmiterii;
+        this.programare=programare;
+        this.statusPlata=status;
+        this.pret=programare.getServiciu().getPret()+programare.getMedic().getCostConsultatie();
+    }
+
     public double getPret() {
         return pret;
     }

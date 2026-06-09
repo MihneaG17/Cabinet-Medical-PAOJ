@@ -7,21 +7,23 @@ import java.util.List;
 public class Reteta {
     private int idReteta;
     private Medic medic;
-    //? programare
-    private List<Medicament> medicamente;
+    private Pacient pacient;
     private LocalDate dataEmiterii;
+    private List<Medicament> medicamente;
 
-    public Reteta(Medic medic, LocalDate dataEmiterii) {
+    public Reteta(Medic medic, Pacient pacient, LocalDate dataEmiterii) {
         this.idReteta=0;
         this.medic=medic;
+        this.pacient=pacient;
         this.dataEmiterii=dataEmiterii;
         this.medicamente=new ArrayList<>();
     }
 
     //constructor pentru citirea din baza de date
-    public Reteta(int idReteta, Medic medic, LocalDate dataEmiterii) {
+    public Reteta(int idReteta, Medic medic, Pacient pacient, LocalDate dataEmiterii) {
         this.idReteta=idReteta;
         this.medic=medic;
+        this.pacient=pacient;
         this.dataEmiterii=dataEmiterii;
         this.medicamente=new ArrayList<>();
     }
@@ -32,6 +34,14 @@ public class Reteta {
 
     public void setMedic(Medic medic) {
         this.medic = medic;
+    }
+
+    public Pacient getPacient() {
+        return pacient;
+    }
+
+    public void setPacient(Pacient pacient) {
+        this.pacient = pacient;
     }
 
     public List<Medicament> getMedicamente() {
@@ -48,6 +58,8 @@ public class Reteta {
 
     @Override
     public String toString() {
-        return "Data: " + dataEmiterii + " - Prescris de Dr. " + medic.getNume() + " " + medic.getPrenume();
+        return "Reteta #" + idReteta + " | Data: " + dataEmiterii +
+                " | Pacient: " + pacient.getNume() + " " + pacient.getPrenume() +
+                " | Prescris de Dr. " + medic.getNume() + " " + medic.getPrenume();
     }
 }

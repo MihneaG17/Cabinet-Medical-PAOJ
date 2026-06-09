@@ -105,6 +105,24 @@ public class MedicService implements GenericService<Medic>{
 
     @Override
     public void delete(int id) {
+        String sql = "DELETE FROM Medici WHERE id_medic = ?";
+        try (Connection conn = DatabaseManager.getInstance().getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, id);
+
+            int rowsAffected = pstmt.executeUpdate();
+
+            if (rowsAffected > 0) {
+                System.out.println("Medicul cu ID-ul " + id + " a fost sters din baza de date.");
+            } else {
+                System.out.println("Nu s-a gasit niciun medic cu acest ID pentru a fi sters.");
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Eroare la stergerea medicului. Este posibil sa fie legat de programari/retete existente.");
+            e.printStackTrace();
+        }
 
     }
 
