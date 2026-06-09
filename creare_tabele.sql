@@ -25,6 +25,7 @@ CREATE TABLE Pacienti (
                           prenume VARCHAR2(50) NOT NULL,
                           nr_telefon VARCHAR2(15),
                           grupa_sanguina VARCHAR2(5),
+                          alergii VARCHAR2(500),
                           parola VARCHAR2(100) NOT NULL
 );
 
