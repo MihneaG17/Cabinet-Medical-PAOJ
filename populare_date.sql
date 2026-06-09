@@ -13,7 +13,7 @@ INSERT INTO Servicii_Medicale (nume_serviciu, pret, durata_minute) VALUES ('Inte
 INSERT INTO Medicamente (nume, dozaj, substanta_activa) VALUES ('Paracetamol', 500, 'Paracetamolum');
 INSERT INTO Medicamente (nume, dozaj, substanta_activa) VALUES ('Nurofen Forte', 400, 'Ibuprofenum');
 INSERT INTO Medicamente (nume, dozaj, substanta_activa) VALUES ('Augmentin', 1000, 'Amoxicillinum');
-INSERT INTO Medicamente (nume, dozaj, substanta_activa) VALUES ('Aspirina Saraca', 100, 'Acidum acetylsalicylicum');
+INSERT INTO Medicamente (nume, dozaj, substanta_activa) VALUES ('Aspirina', 100, 'Acidum acetylsalicylicum');
 INSERT INTO Medicamente (nume, dozaj, substanta_activa) VALUES ('Concor', 5, 'Bisoprololum');
 
 COMMIT;
