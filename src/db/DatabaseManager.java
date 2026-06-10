@@ -15,13 +15,6 @@ public class DatabaseManager {
 
     //constructor privat pt singleton
     private DatabaseManager() {
-//        try {
-//            this.connection= DriverManager.getConnection(URL, USER, PASSWORD);
-//            System.out.println("(DatabaseManager) Conexiune stabilita cu succes la Oracle");
-//        } catch (SQLException e) {
-//            System.err.println("(DatabaseManager) Eroare la conectarea cu baza de date.");
-//            System.out.println(e.getMessage());
-//        }
     }
 
     //metoda prin care clasele cer instanta singleton-ului

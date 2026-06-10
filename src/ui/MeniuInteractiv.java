@@ -61,7 +61,7 @@ public class MeniuInteractiv {
 
     //inregistrare cont pacient
     private void inregistrareContPacient() {
-        System.out.println("---- Creare cont nou pacient ----");
+        System.out.println("----Creare cont nou pacient----");
         System.out.print("Nume: ");
         String numP = scanner.nextLine();
 
@@ -112,7 +112,7 @@ public class MeniuInteractiv {
 
         if(userInput.equals("mihnea") && parolaInput.equals("mihnea")) {
             System.out.println("Autentificare cu succes");
-            AuditService.getInstance().logAction("Autentificare utilizator");
+            AuditService.getInstance().logAction("Autentificare admin");
             meniuAdmin();
         }
         else {
@@ -182,7 +182,7 @@ public class MeniuInteractiv {
 
             switch (choice) {
                 case 1:
-                    System.out.println("Adaugare medic nou");
+                    System.out.println("----Adaugare medic nou----");
                     System.out.print("Nume: ");
                     String nume = scanner.nextLine();
 
@@ -231,7 +231,7 @@ public class MeniuInteractiv {
                     AuditService.getInstance().logAction("Adaugare angajat nou");
                     break;
                 case 2:
-                    System.out.println("Lista medici:");
+                    System.out.println("----Lista medici----");
                     List<Medic> listaMedici=MedicService.getInstance().readAll();
 
                     if(listaMedici.isEmpty()) {
@@ -244,7 +244,7 @@ public class MeniuInteractiv {
                     }
                     break;
                 case 3:
-                    System.out.println("Concediere medic");
+                    System.out.println("----Concediere medic----");
                     System.out.println("Introduceti CNP-ul medicului pe care doriti sa-l concediati");
                     String cnpCautat=scanner.nextLine();
 
@@ -286,7 +286,7 @@ public class MeniuInteractiv {
 
             switch (choice) {
                 case 1:
-                    System.out.println("Adaugare asistent");
+                    System.out.println("----Adaugare asistent----");
                     System.out.print("Nume: ");
                     String n = scanner.nextLine();
 
@@ -333,7 +333,7 @@ public class MeniuInteractiv {
 
                     break;
                 case 2:
-                    System.out.println("Lista asistenti");
+                    System.out.println("----Lista asistenti----");
                     List<Asistent> asistenti=AsistentService.getInstance().readAll();
 
                     if(asistenti.isEmpty())
@@ -347,7 +347,7 @@ public class MeniuInteractiv {
                     }
                     break;
                 case 3:
-                    System.out.println("Concediere asistent");
+                    System.out.println("----Concediere asistent----");
                     System.out.println("Introduceti CNP-ul asistentului:");
                     String cnpCautatAsistent = scanner.nextLine();
 
@@ -393,7 +393,7 @@ public class MeniuInteractiv {
                     inregistrareContPacient();
                     break;
                 case 2:
-                    System.out.println("Cautare pacient dupa CNP");
+                    System.out.println("----Cautare pacient dupa CNP----");
                     System.out.println("Introduceti CNP-ul cautat:");
                     String cnpPacientCautat = scanner.nextLine();
 
@@ -406,7 +406,7 @@ public class MeniuInteractiv {
                     }
                     break;
                 case 3:
-                    System.out.println("Lista tuturor pacientilor");
+                    System.out.println("----Lista tuturor pacientilor----");
                     List<Pacient> listaPacienti = PacientService.getInstance().readAll();
 
                     if (listaPacienti.isEmpty()) {
@@ -447,7 +447,7 @@ public class MeniuInteractiv {
 
             switch (choice) {
                 case 1:
-                    System.out.println("--- Lista Sali ---");
+                    System.out.println("---Lista Sali---");
                     AuditService.getInstance().logAction("Vizualizare resurse clinica");
                     List<models.Sala> sali = SalaService.getInstance().readAll();
                     if(sali.isEmpty()) {
@@ -461,7 +461,7 @@ public class MeniuInteractiv {
                     break;
 
                 case 2:
-                    System.out.println("--- Servicii Medicale ---");
+                    System.out.println("----Servicii Medicale----");
                     AuditService.getInstance().logAction("Vizualizare resurse clinica");
                     List<models.ServiciuMedical> servicii = ServiciuMedicalService.getInstance().readAll();
                     if(servicii.isEmpty()) {
@@ -476,7 +476,7 @@ public class MeniuInteractiv {
                     break;
 
                 case 3:
-                    System.out.println("--- Catalog Medicamente ---");
+                    System.out.println("----Catalog Medicamente----");
                     AuditService.getInstance().logAction("Vizualizare resurse clinica");
                     List<models.Medicament> medicamente = MedicamentService.getInstance().readAll();
                     if(medicamente.isEmpty()) {
@@ -584,7 +584,7 @@ public class MeniuInteractiv {
     //metode meniuPacient
 
     private void veziMediciDisponibili() {
-        System.out.println("Medici disponibili");
+        System.out.println("----Medici disponibili----");
         List<Medic> medici=MedicService.getInstance().readAll();
 
         if(medici.isEmpty()) {
@@ -599,7 +599,7 @@ public class MeniuInteractiv {
     }
 
     private void vizualizareFisaMedicala(Pacient pacientLogat) {
-        System.out.println("Fisa Medicala - " + pacientLogat.getNume() + " " + pacientLogat.getPrenume());
+        System.out.println("----Fisa Medicala - " + pacientLogat.getNume() + " " + pacientLogat.getPrenume() + "----");
         AuditService.getInstance().logAction("Vizualizare fisa medicala");
         System.out.println("---------------");
         System.out.println("Grupa sanguina: " + pacientLogat.getGrupaSanguina());
@@ -624,7 +624,7 @@ public class MeniuInteractiv {
             }
         }
 
-        System.out.println("----Retete prescrise----");
+        System.out.println("--Retete prescrise--");
         List<Reteta> retete = new ArrayList<>();
         for (Reteta r : RetetaService.getInstance().readAll()) {
             if (r.getPacient().getIdPacient() == pacientLogat.getIdPacient()) {
@@ -664,7 +664,7 @@ public class MeniuInteractiv {
         for (int i=0; i<serviciiDisponibile.size(); i++) {
             System.out.println((i + 1) + ". " + serviciiDisponibile.get(i).getNumeServiciu() + " (" + serviciiDisponibile.get(i).getPret() + " RON)");
         }
-        int indexServiciu = scanner.nextInt() - 1;
+        int indexServiciu = scanner.nextInt()-1;
         ServiciuMedical serviciuAles = serviciiDisponibile.get(indexServiciu);
 
         List<Medic> mediciFiltrati = new ArrayList<>();
@@ -710,10 +710,11 @@ public class MeniuInteractiv {
         for (Programare p : toateProgramarile) {
             if (p.getMedic().getIdMedic() == medicAles.getIdMedic() && 
                 p.getDataSiOra().toLocalDate().equals(dataAleasa) &&
-                !p.getStatus().equals(Programare.STATUS_ANULATA)) {
-                oreDisponibile.remove(Integer.valueOf(p.getDataSiOra().getHour()));
+                !p.getStatus().equals(Programare.STATUS_ANULATA)) //aici ignor programarile anulate
+                {
+                    oreDisponibile.remove(Integer.valueOf(p.getDataSiOra().getHour()));
+                }
             }
-        }
 
         if (oreDisponibile.isEmpty()) {
             System.out.println("Medicul selectat nu are nicio ora disponibila in data de " + dataAleasa + ".");
@@ -737,10 +738,11 @@ public class MeniuInteractiv {
             for (Programare p : toateProgramarile) {
                 if (p.getSala().getNrSala() == s.getNrSala() && 
                     p.getDataSiOra().equals(dataFinala) &&
-                    !p.getStatus().equals(Programare.STATUS_ANULATA)) {
-                    salaOcupata = true;
-                    break;
-                }
+                    !p.getStatus().equals(Programare.STATUS_ANULATA)) //iarasi ignor programarile anulate
+                    {
+                        salaOcupata = true;
+                        break;
+                    }
             }
             if (!salaOcupata) {
                 salaAleasa = s;
@@ -935,6 +937,7 @@ public class MeniuInteractiv {
     }
 
     public void meniuMedic(Medic medicLogat) {
+        System.out.println("----Autentificare medic----");
         int choice=-1;
         do {
             System.out.println("1. Vezi programarile de azi");
